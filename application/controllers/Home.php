@@ -39,4 +39,8 @@ class home extends CI_Controller {
 	{
 		$this->load->view('mastercustomer');
 	}
+	public function penjualan()
+	{
+		$this->load->view('penjualan');
+	}
 }

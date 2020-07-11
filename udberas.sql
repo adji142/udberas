@@ -29,7 +29,7 @@ CREATE TABLE `penjualandetail`  (
   `QtyJual` decimal(16, 2) NOT NULL,
   `HargaJual` double(16, 2) NOT NULL,
   `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE CURRENT_TIMESTAMP(6),
+  `Createdon` datetime(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`RowID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
@@ -50,7 +50,7 @@ CREATE TABLE `penjualanheader`  (
   `printed` bit(1) NOT NULL DEFAULT b'0',
   `Status` int(11) NOT NULL COMMENT '1: Ordered, 2: DiProses, 3: Dikirim, 4: Selesai, 5: Cancel',
   `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE CURRENT_TIMESTAMP(6),
+  `Createdon` datetime(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`RowID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
@@ -155,7 +155,7 @@ CREATE TABLE `tcustomer`  (
   `NoTlp` varchar(15) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `Source` int(11) NOT NULL COMMENT '1: append, 2 : ecomers',
   `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE CURRENT_TIMESTAMP(6),
+  `Createdon` datetime(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
   `isActive` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`id`, `KodeCustomer`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
@@ -174,7 +174,7 @@ CREATE TABLE `titem`  (
   `ItemName` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `ItemGroup` int(11) NOT NULL DEFAULT 1,
   `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE CURRENT_TIMESTAMP(6),
+  `Createdon` datetime(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
   `isActive` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`ItemCode`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;

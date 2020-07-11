@@ -9,8 +9,8 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   #RewriteBase /
-  #RewriteBase /CRegister/index.php
+#  #RewriteBase /CRegister/index.php
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^ index.php [QSA,L]
   #RewriteRule ^(.*)$ index.php/$1 [L]
-</IfModule>
+#</IfModule>
