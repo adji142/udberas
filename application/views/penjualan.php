@@ -47,14 +47,14 @@
 	    		<div class="control-group">
 	    			<label class="control-label">Nomer Transaksi</label>
 	    			<div class="controls">
-	    				<input type="text" name="NoTransaksi" id="NoTransaksi" required="" placeholder="Nomor Transaksi" readonly="" required="">
+	    				<input type="text" name="NoTransaksi" id="NoTransaksi" required="" placeholder="Nomor Transaksi" readonly="" required="" autocomplete="off">
 	    				<input type="hidden" name="formtype" id="formtype" value="add">
 	    			</div>
 	    		</div>
 	    		<div class="control-group">
 	    			<label class="control-label">Tanggal Transaksi</label>
 	    			<div class="controls">
-	    				<input type="date" name="TglTransaksi" id="TglTransaksi" required="">
+	    				<input type="date" name="TglTransaksi" id="TglTransaksi" required="" autocomplete="off">
 	    			</div>
 	    		</div>
 	    		<div class="control-group">
@@ -71,6 +71,7 @@
 	    				</datalist>
 	    			</div>
 	    		</div>
+
 	            <!-- <div class="control-group">
 	    			<label class="control-label">Group Item</label>
 	    			<div class="controls">
@@ -80,10 +81,47 @@
 	    				</select>
 	    			</div>
 	    		</div> -->
-	            <button class="btn btn-primary" id="btn_Save">Save</button>
 	    	</form>
+	    	<div id="gridContainer_Detail">
+        	
+        	</div>
+        	<br>
+        	<button class="btn btn-primary" id="btn_Save">Save</button>
 	    </div>
   	</div>
+  </div>
+</div>
+
+<div class="modal hide" id="ModalItem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><div id="title_modal"></div></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Input from hire -->
+        <table class="table table-bordered data-table" id="alat_list">
+        	<thead>
+              <tr>
+              	<th>Row ID</th>
+              	<th>Kode Item</th>
+                <th>Nama Item</th>
+              </tr>
+            </thead>
+            <tbody id="load_data_alat">
+              
+            </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary" id="Save_Btn">Save changes</button> -->
+      </div>
+    </div>
   </div>
 </div>
 <?php
@@ -93,19 +131,44 @@
 <script type="text/javascript">
 	$(function () {
         $(document).ready(function () {
+        	
         	var where_field = '';
         	var where_value = '';
         	var table = 'users';
 
 	        $.ajax({
 	          type: "post",
-	          url: "<?=base_url()?>Mstr_Item/Read",
+	          url: "<?=base_url()?>Trx_penjualan/read",
 	          data: {'id':''},
 	          dataType: "json",
 	          success: function (response) {
 	          	bindGrid(response.data);
+	          	bindGrid_Detail(response.datadetail);
 	          }
 	        });
+	        // NoTrx
+	        var table = 'penjualanheader';
+	    	var field = 'NoTransaksi';
+	        var prev = 0;
+	    	$.ajax({
+		      type    :'post',
+		      url     : '<?=base_url()?>Apps/GetNumeric',
+		      data    : {table:table,field:field},
+		      dataType: 'json',
+		      success:function (response) {
+		        if(response.success == true){
+		        	var str = "" + response.prefix;
+					var pad = "0000";
+					var ans = pad.substring(0, pad.length - str.length) + str;
+
+					var today = new Date();
+					var year = today.getFullYear();
+					var month = today.getMonth();
+
+			    	$('#NoTransaksi').val('1'+year+''+month+''+ans);
+		        }
+		      }
+		    });
         });
         $('#post_').submit(function (e) {
         	$('#btn_Save').text('Tunggu Sebentar.....');
@@ -146,6 +209,102 @@
 		          }
 		        }
 		      });
+        });
+        $('#btn_Save').click(function () {
+        	$('#btn_Save').text('Tunggu Sebentar.....');
+		    $('#btn_Save').attr('disabled',true);
+
+		    var rowid = uuidv4();
+		    var detailid = uuidv4();
+
+		    var gridItems = $("#gridContainer_Detail").dxDataGrid('instance')._controllers.data._dataSource._items;
+
+		    var NoTransaksi = $('#NoTransaksi').val();
+			var TglTransaksi = $('#TglTransaksi').val();
+			var KodeCustomer = $('#KodeCustomer').val();
+			var Status = 1;
+			var row = 'header';
+
+			$.ajax({
+				type    :'post',
+			    url     : '<?=base_url()?>Trx_penjualan/CRUD',
+			    data    : {'NoTransaksi' : NoTransaksi,'TglTransaksi':TglTransaksi,'KodeCustomer':KodeCustomer,'Status':Status,'table':row,'RowID':rowid},
+			    dataType: 'json',
+			    success:function (response) {
+			    	if (response.success == true) {
+			    		if (gridItems != '[]') {
+			    			row = 'detail';
+
+			    			var KodeItem;
+		    				var NamaItem;
+		    				var QtyJual;
+		    				var HargaJual;
+
+			    			$.each(gridItems,function (k,v) {
+			    				console.log(gridItems);
+			    				KodeItem = v.ItemCode;
+			    				NamaItem = v.ItemName;
+			    				QtyJual = v.QtyJual;
+			    				HargaJual = v.HargaJual;
+
+			    				$.ajax({
+				    				type    :'post',
+								    url     : '<?=base_url()?>Trx_penjualan/CRUD',
+								    data    : {'NoTransaksi' : NoTransaksi,'table':row,'KodeItem':KodeItem,'NamaItem':NamaItem,'QtyJual':QtyJual,'HargaJual':HargaJual,'DetailRowID':detailid,'HeaderID':rowid},
+								    dataType: 'json',
+								    success:function (response) {
+								    	if (response.success == true) {
+								    		$('#modal_').modal('toggle');
+								        	Swal.fire({
+								              type: 'success',
+								              title: 'Horray...',
+								              text: 'Data Berhasil Di Tambahkan',
+								              // footer: '<a href>Why do I have this issue?</a>'
+								            }).then((result)=>{
+								              location.reload();
+								            });
+								    	}
+								    	else{
+								    		$('#modal_').modal('toggle');
+								        	Swal.fire({
+								              type: 'error',
+								              title: 'Woops...',
+								              text: response.message,
+								              // footer: '<a href>Why do I have this issue?</a>'
+								            }).then((result)=>{
+								              $('#modal_').modal('show');
+								            });
+								    	}
+								    }
+				    			});
+			    			});
+			    		}
+			    		else{
+			    			$('#modal_').modal('toggle');
+				        	Swal.fire({
+				              type: 'error',
+				              title: 'Woops...',
+				              text: response.message,
+				              // footer: '<a href>Why do I have this issue?</a>'
+				            }).then((result)=>{
+				              $('#modal_').modal('show');
+				            });
+			    		}
+			    	}
+			    	else{
+			    		$('#modal_').modal('toggle');
+			        	Swal.fire({
+			              type: 'error',
+			              title: 'Woops...',
+			              text: response.message,
+			              // footer: '<a href>Why do I have this issue?</a>'
+			            }).then((result)=>{
+			              $('#modal_').modal('show');
+			            });
+			    	}
+			    }
+			});
+
         });
         $('.close').click(function() {
         	location.reload();
@@ -194,6 +353,155 @@
 			$("#gridContainer").dxDataGrid({
 				allowColumnResizing: true,
 		        dataSource: data,
+		        keyExpr: "NoTransaksi",
+		        showBorders: true,
+		        allowColumnReordering: true,
+		        allowColumnResizing: true,
+		        columnAutoWidth: true,
+		        showBorders: true,
+		        paging: {
+		            enabled: false
+		        },
+		        editing: {
+		            mode: "row",
+		            allowAdding:true,
+		            // allowUpdating: true,
+		            // allowDeleting: true,
+		            texts: {
+		                confirmDeleteMessage: ''  
+		            }
+		        },
+		        searchPanel: {
+		            visible: true,
+		            width: 240,
+		            placeholder: "Search..."
+		        },
+		        export: {
+		            enabled: true,
+		            fileName: "Daftar Pelayan"
+		        },
+		        columns: [
+		            {
+		                dataField: "NoTransaksi",
+		                caption: "No. Transaksi",
+		                allowEditing:false
+		            },
+		            {
+		                dataField: "TglTransaksi",
+		                caption: "Tgl. Transaksi",
+		                allowEditing:false
+		            },
+		            {
+		                dataField: "KodeCustomer",
+		                caption: "Kode Customer",
+		                allowEditing:false
+		            },
+		            {
+		                dataField: "NamaCustomer",
+		                caption: "Nama Customer",
+		                allowEditing:false
+		            },
+		            {
+	                    caption: "Action",
+	                    allowEditing:false,
+	                    cellTemplate: function(cellElement, cellInfo) {
+	                    	var LinkAccess = "";
+	                    	LinkAccess = '<a><span class="date badge badge-important">Update Status</span></a><br> <a><span class="date badge badge-warning">Print</span></a>';
+		                    cellElement.append(LinkAccess);
+		                }
+	                },
+		        ],
+		        onEditingStart: function(e) {
+		            GetData(e.data.ItemCode);
+		        },
+		        onInitNewRow: function(e) {
+		            // logEvent("InitNewRow");
+		            $('#modal_').modal('show');
+		        },
+		        onRowInserting: function(e) {
+		            // logEvent("RowInserting");
+		        },
+		        onRowInserted: function(e) {
+		            // logEvent("RowInserted");
+		            // alert('');
+		            // console.log(e.data.onhand);
+		            // var index = e.row.rowIndex;
+		        },
+		        onRowUpdating: function(e) {
+		            // logEvent("RowUpdating");
+		            
+		        },
+		        onRowUpdated: function(e) {
+		            // logEvent(e);
+		        },
+		        onRowRemoving: function(e) {
+		        	id = e.data.ItemCode;
+		        	Swal.fire({
+					  title: 'Apakah anda yakin?',
+					  text: "anda akan menghapus data di baris ini !",
+					  icon: 'warning',
+					  showCancelButton: true,
+					  confirmButtonColor: '#3085d6',
+					  cancelButtonColor: '#d33',
+					  confirmButtonText: 'Yes, delete it!'
+					}).then((result) => {
+					  if (result.value) {
+					  	var table = 'app_setting';
+					  	var field = 'id';
+					  	var value = id;
+
+					  	$.ajax({
+					        type    :'post',
+					        url     : '<?=base_url()?>Mstr_Item/CRUD',
+					        data    : {'ItemCode':id,'formtype':'delete'},
+					        dataType: 'json',
+					        success : function (response) {
+					          if(response.success == true){
+					            Swal.fire(
+							      'Deleted!',
+							      'Your file has been deleted.',
+							      'success'
+							    ).then((result)=>{
+					              location.reload();
+					            });
+					          }
+					          else{
+					            Swal.fire({
+					              type: 'error',
+					              title: 'Woops...',
+					              text: response.message,
+					              // footer: '<a href>Why do I have this issue?</a>'
+					            }).then((result)=>{
+					            	location.reload();
+					            });
+					          }
+					        }
+					      });
+					    
+					  }
+					  else{
+					  	location.reload();
+					  }
+					})
+		        },
+		        onRowRemoved: function(e) {
+		        	// console.log(e);
+		        },
+				onEditorPrepared: function (e) {
+					// console.log(e);
+
+				}
+		    });
+
+		    // add dx-toolbar-after
+		    // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
+		}
+
+		function bindGrid_Detail(data) {
+
+			$("#gridContainer_Detail").dxDataGrid({
+				allowColumnResizing: true,
+		        dataSource: data,
 		        keyExpr: "ItemCode",
 		        showBorders: true,
 		        allowColumnReordering: true,
@@ -212,25 +520,26 @@
 		                confirmDeleteMessage: ''  
 		            }
 		        },
-		        searchPanel: {
-		            visible: true,
-		            width: 240,
-		            placeholder: "Search..."
-		        },
-		        export: {
-		            enabled: true,
-		            fileName: "Daftar Pelayan"
-		        },
 		        columns: [
 		            {
 		                dataField: "ItemCode",
 		                caption: "Kode Item",
-		                allowEditing:false
+		                allowEditing:true
 		            },
 		            {
 		                dataField: "ItemName",
 		                caption: "Nama Item",
 		                allowEditing:false
+		            },
+		            {
+		                dataField: "QtyJual",
+		                caption: "Qty",
+		                allowEditing:true
+		            },
+		            {
+		                dataField: "HargaJual",
+		                caption: "Harga",
+		                allowEditing:true
 		            },
 		        ],
 		        onEditingStart: function(e) {
@@ -311,11 +620,53 @@
 		        },
 				onEditorPrepared: function (e) {
 					// console.log(e);
+					if (e.dataField == "ItemCode") {
+						$(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) { 
+
+							var grid = $("#gridContainer_Detail").dxDataGrid("instance");
+							var index = e.row.rowIndex;
+							var result = "new description ";
+
+							var kode = args.value;
+							$.ajax({
+								type    :'post',
+							    url     : '<?=base_url()?>Mstr_Item/read',
+							    data    : {'id':kode},
+							    dataType: 'json',
+							    success:function (response) {
+							    	if (response.data.length > 0) {
+							    		grid.cellValue(index, "ItemCode", response.data[0]["ItemCode"]);
+							    		grid.cellValue(index, "ItemName", response.data[0]["ItemName"]);
+							    		grid.cellValue(index, "QtyJual", 0);
+							    		grid.cellValue(index, "HargaJual", 0);
+							    		// console.log(response.data[0][]);
+							    	}
+							    	else{
+							    		$('#modal_').modal('toggle');
+								            Swal.fire({
+								              type: 'error',
+								              title: 'Woops...',
+								              text: response.message,
+								              // footer: '<a href>Why do I have this issue?</a>'
+								            }).then((result)=>{
+								            	$('#modal_').modal('show');
+								            });
+							    	}
+							    }
+							});
+						});
+					}
 				}
 		    });
 
 		    // add dx-toolbar-after
 		    // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
+		}
+		function uuidv4() {
+		  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+		    return v.toString(16);
+		  });
 		}
 	});
 </script>

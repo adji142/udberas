@@ -180,167 +180,26 @@ class Apps extends CI_Controller {
 		json_encode($data);
 	}
 
-	public function initialData()
+	public function GetNumeric()
 	{
-		$data = array('success' => false ,'message'=>array(),'data'=>array());
+		$data = array('success' => false ,'message'=>array(),'prefix'=>'');
 
-		$rs = $this->db->query("
-				SELECT 
-					CONCAT(DATE_FORMAT(Tanggal,'%b'),'-',YEAR(Tanggal))  Periode,
-					SUM(CASE WHEN Tipe = 'KARTUN' THEN Qty else 0 END) KARTUN,
-					SUM(CASE WHEN Tipe = 'ABSTRAK' THEN Qty else 0 END) ABSTRAK,
-					SUM(CASE WHEN Tipe = 'TROPIKAL' THEN Qty else 0 END) TROPIKAL
-				FROM ttransaksi 
-				WHERE YEAR(Tanggal) = '2019'
-				GROUP BY CONCAT(DATE_FORMAT(Tanggal,'%b'),'-',YEAR(Tanggal))
-				ORDER BY MONTH(Tanggal)
-			");
+		$table = $this->input->post('table');
+		$field = $this->input->post('field');
+		$prefix = 0;
 
-		if ($rs){
-			$data['success'] = true;
-			$data['data']= $rs->result();
+		$call = $this->ModelsExecuteMaster->GetMax($table,$field);
+		// var_dump($call->result());
+		if ($call->row()->$field != NULL) {
+			$prefix = substr($call->row()->NoTransaksi, -4)+1;
 		}
 		else{
-			$data['message']='Gagal Proses Initial Data testing';
+			$prefix = 1;
 		}
-		echo json_encode($data);
-	}
-
-	public function AddForecast()
-	{
-		$data = array('success' => false ,'message'=>array(),'data'=>array());
-
-		$Periode = $this->input->post('Periode');
-		$Jenis = $this->input->post('Jenis');
-		$Jumlah = $this->input->post('Jumlah');
-		$F01 = $this->input->post('F01');
-		$F02 = $this->input->post('F02');
-		$F03 = $this->input->post('F03');
-		$F04 = $this->input->post('F04');
-		$F05 = $this->input->post('F05');
-		$F06 = $this->input->post('F06');
-		$F07 = $this->input->post('F07');
-		$F08 = $this->input->post('F08');
-		$F09 = $this->input->post('F09');
-
-		$param = array(
-			'Periode'	=> $Periode,
-			'Jenis'		=> $Jenis,
-			'Jumlah'	=> $Jumlah,
-			'F01'		=> $F01,
-			'F02'		=> $F02,
-			'F03'		=> $F03,
-			'F04'		=> $F04,
-			'F05'		=> $F05,
-			'F06'		=> $F06,
-			'F07'		=> $F07,
-			'F08'		=> $F08,
-			'F09'		=> $F09
-		);
-
-		try {
-			$this->ModelsExecuteMaster->ExecInsert($param,'tforcast');
-			$data['success'] = true;
-		} catch (Exception $e) {
-			$data['success'] = false;
-			$data['message'] = "Gagal memproses data ". $e->getMessage();
-		}
-		echo json_encode($data);
-	}
-	public function RemoveData()
-	{
-		$data = array('success' => false ,'message'=>array(),'data'=>array());
-		$Jenis = $this->input->post('Jenis');
-
-		$rs = $this->ModelsExecuteMaster->DeleteData(array('Jenis' => $Jenis),'tforcast');
+		// echo "string".$prefix;
 		$data['success'] = true;
+		$data['prefix'] = $prefix;
 
-		echo json_encode($data);
-	}
-
-	public function ShowDataForcast()
-	{
-		$data = array('success' => false ,'message'=>array(),'data'=>array());
-
-		$Jenis = $this->input->post('Jenis');
-
-		$rs = $this->db->query("
-				SELECT * FROM tforcast where Jenis = '".$Jenis."' order by id
-			");
-
-		if ($rs){
-			$data['success'] = true;
-			$data['data']= $rs->result();
-		}
-		else{
-			$data['message']='Gagal Proses Initial Data testing';
-		}
-		echo json_encode($data);
-	}
-	public function RemoveMae()
-	{
-		$data = array('success' => false ,'message'=>array(),'data'=>array());
-		$Jenis = $this->input->post('Jenis');
-
-		$rs = $this->ModelsExecuteMaster->DeleteData(array('Jenis' => $Jenis),'tmae');
-		$data['success'] = true;
-
-		echo json_encode($data);
-	}
-	public function AddMae()
-	{
-		$data = array('success' => false ,'message'=>array(),'data'=>array());
-
-		$Jenis = $this->input->post('Jenis');
-		$F01 = $this->input->post('F01');
-		$F02 = $this->input->post('F02');
-		$F03 = $this->input->post('F03');
-		$F04 = $this->input->post('F04');
-		$F05 = $this->input->post('F05');
-		$F06 = $this->input->post('F06');
-		$F07 = $this->input->post('F07');
-		$F08 = $this->input->post('F08');
-		$F09 = $this->input->post('F09');
-
-		$param = array(
-			'Jenis'		=> $Jenis,
-			'F01'		=> $F01,
-			'F02'		=> $F02,
-			'F03'		=> $F03,
-			'F04'		=> $F04,
-			'F05'		=> $F05,
-			'F06'		=> $F06,
-			'F07'		=> $F07,
-			'F08'		=> $F08,
-			'F09'		=> $F09
-		);
-
-		try {
-			$this->ModelsExecuteMaster->ExecInsert($param,'tmae');
-			$data['success'] = true;
-		} catch (Exception $e) {
-			$data['success'] = false;
-			$data['message'] = "Gagal memproses data ". $e->getMessage();
-		}
-		echo json_encode($data);
-	}
-	public function ShowDataMAE()
-	{
-		$data = array('success' => false ,'message'=>array(),'data'=>array());
-
-		$Jenis = $this->input->post('Jenis');
-
-		$rs = $this->db->query("
-				SELECT * FROM tmae where Jenis = '".$Jenis."' order by id
-			");
-
-		if ($rs){
-			$data['success'] = true;
-			$data['data']= $rs->result();
-		}
-		else{
-			$data['message']='Gagal Proses Initial Data testing';
-		}
 		echo json_encode($data);
 	}
 }

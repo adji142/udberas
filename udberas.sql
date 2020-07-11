@@ -11,7 +11,7 @@
  Target Server Version : 100406
  File Encoding         : 65001
 
- Date: 10/07/2020 16:11:42
+ Date: 11/07/2020 12:31:53
 */
 
 SET NAMES utf8mb4;
@@ -29,13 +29,14 @@ CREATE TABLE `penjualandetail`  (
   `QtyJual` decimal(16, 2) NOT NULL,
   `HargaJual` double(16, 2) NOT NULL,
   `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `Createdon` datetime(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`RowID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of penjualandetail
 -- ----------------------------
+INSERT INTO `penjualandetail` VALUES ('48e6a0ef-86b3-4a58-a364-160fbd6bec12', '2270f114-5f61-4023-84f3-4970062c7699', '100.0001', 'Beras C4 5KG', 1.00, 4500.00, 'admin', '2020-07-11 12:31:05.000000');
 
 -- ----------------------------
 -- Table structure for penjualanheader
@@ -50,13 +51,14 @@ CREATE TABLE `penjualanheader`  (
   `printed` bit(1) NOT NULL DEFAULT b'0',
   `Status` int(11) NOT NULL COMMENT '1: Ordered, 2: DiProses, 3: Dikirim, 4: Selesai, 5: Cancel',
   `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `Createdon` datetime(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE CURRENT_TIMESTAMP(6),
   PRIMARY KEY (`RowID`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of penjualanheader
 -- ----------------------------
+INSERT INTO `penjualanheader` VALUES ('2270f114-5f61-4023-84f3-4970062c7699', '1202060001', '2020-07-11 00:00:00.000000', 'CL0001 ', 1, b'0', 1, 'admin', '2020-07-11 12:31:05.000000');
 
 -- ----------------------------
 -- Table structure for permission
@@ -86,7 +88,7 @@ INSERT INTO `permission` VALUES (2, 'Master Item', 'item', NULL, '1', b'1', b'0'
 INSERT INTO `permission` VALUES (3, 'Master Pelanggan', 'customer', NULL, '1', b'1', b'0', 2, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (4, 'User', NULL, NULL, '1', b'1', b'0', 3, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (5, 'Transaksi', NULL, 'icon-pencil', '0', b'1', b'0', 10, b'1', NULL, NULL, NULL);
-INSERT INTO `permission` VALUES (6, 'Penjualan', NULL, NULL, '5', b'1', b'0', 11, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (6, 'Penjualan', 'penjualan', NULL, '5', b'1', b'0', 11, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (7, 'Pembelian', NULL, NULL, '5', b'1', b'0', 12, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (8, 'Produksi', NULL, NULL, '5', b'1', b'0', 13, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (9, 'Informasi', NULL, 'icon-info-sign', '0', b'1', b'1', 20, b'1', NULL, NULL, NULL);
@@ -155,7 +157,7 @@ CREATE TABLE `tcustomer`  (
   `NoTlp` varchar(15) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `Source` int(11) NOT NULL COMMENT '1: append, 2 : ecomers',
   `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `Createdon` datetime(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE CURRENT_TIMESTAMP(6),
   `isActive` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`id`, `KodeCustomer`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
@@ -174,7 +176,7 @@ CREATE TABLE `titem`  (
   `ItemName` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `ItemGroup` int(11) NOT NULL DEFAULT 1,
   `Createdby` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
-  `Createdon` datetime(6) NOT NULL ON UPDATE CURRENT_TIMESTAMP(6),
+  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE CURRENT_TIMESTAMP(6),
   `isActive` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`ItemCode`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
