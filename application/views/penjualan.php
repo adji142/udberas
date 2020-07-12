@@ -124,6 +124,42 @@
     </div>
   </div>
 </div>
+
+
+<div class="modal hide" id="ModalStatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ganti Status Transaksi
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </h5>
+      </div>
+      <div class="modal-body">
+        <!-- Input from hire -->
+        <input type="hidden" name="NoTransaksi" id="NoTransaksi">
+        <div class="control-group">
+			<label class="control-label">Status Transaksi</label>
+			<div class="controls">
+				<select id="listStatus" >
+					<option value="1">Ordered</option>
+					<option value="2">Di Proses</option>
+					<option value="3">Di Kirim</option>
+					<option value="4">Selesai</option>
+					<option value="5">Cancel</option>
+				</select>
+			</div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="Save_Btn_Status">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <?php
     require_once(APPPATH."views/parts/Footer.php");
 ?>
@@ -215,7 +251,6 @@
 		    $('#btn_Save').attr('disabled',true);
 
 		    var rowid = uuidv4();
-		    var detailid = uuidv4();
 
 		    var gridItems = $("#gridContainer_Detail").dxDataGrid('instance')._controllers.data._dataSource._items;
 
@@ -239,8 +274,9 @@
 		    				var NamaItem;
 		    				var QtyJual;
 		    				var HargaJual;
-
+		    				var x = 0;
 			    			$.each(gridItems,function (k,v) {
+			    				var detailid = uuidv4();
 			    				console.log(gridItems);
 			    				KodeItem = v.ItemCode;
 			    				NamaItem = v.ItemName;
@@ -254,15 +290,20 @@
 								    dataType: 'json',
 								    success:function (response) {
 								    	if (response.success == true) {
-								    		$('#modal_').modal('toggle');
-								        	Swal.fire({
-								              type: 'success',
-								              title: 'Horray...',
-								              text: 'Data Berhasil Di Tambahkan',
-								              // footer: '<a href>Why do I have this issue?</a>'
-								            }).then((result)=>{
-								              location.reload();
-								            });
+								    		x += 1;
+								    		console.log(x + " == " + gridItems.length);
+								    		if (x == gridItems.length ) {
+								    			$('#modal_').modal('toggle');
+								    			Swal.fire({
+									              type: 'success',
+									              title: 'Horray...',
+									              text: 'Data Berhasil Di Tambahkan',
+									              // footer: '<a href>Why do I have this issue?</a>'
+									            }).then((result)=>{
+									              location.reload();
+									            });
+								    		}
+								        	
 								    	}
 								    	else{
 								    		$('#modal_').modal('toggle');
@@ -325,7 +366,40 @@
 		          });
 	          }
 	        });
-        })
+        });
+        $('#Save_Btn_Status').click(function () {
+        	// alert($('#listStatus').val());
+        	$.ajax({
+				type    :'post',
+			    url     : '<?=base_url()?>Trx_penjualan/TransactionUpdate',
+			    data    : {'NoTransaksi':$('#NoTransaksi').val(),'Status':$('#listStatus').val()},
+			    dataType: 'json',
+			    success:function (response) {
+			    	if (response.success == true) {
+			    		$('#ModalStatus').modal('toggle');
+			    		Swal.fire({
+			              type: 'success',
+			              title: 'Horray...',
+			              text: 'Status Berhasil Di rubah',
+			              // footer: '<a href>Why do I have this issue?</a>'
+			            }).then((result)=>{
+			              location.reload();
+			            });
+			    	}
+			    	else{
+			    		$('#ModalStatus').modal('toggle');
+				            Swal.fire({
+				              type: 'error',
+				              title: 'Woops...',
+				              text: response.message,
+				              // footer: '<a href>Why do I have this issue?</a>'
+				            }).then((result)=>{
+				            	$('#ModalStatus').modal('show');
+				            });
+			    	}
+			    }
+			});
+        });
 		function GetData(id) {
 			var where_field = 'id';
         	var where_value = id;
@@ -402,11 +476,16 @@
 		                allowEditing:false
 		            },
 		            {
+		            	dataField : "DescStatus",
+		            	caption : "Status Transaksi",
+		            	allowEditing : false
+		            },
+		            {
 	                    caption: "Action",
 	                    allowEditing:false,
 	                    cellTemplate: function(cellElement, cellInfo) {
 	                    	var LinkAccess = "";
-	                    	LinkAccess = '<a><span class="date badge badge-important">Update Status</span></a><br> <a><span class="date badge badge-warning">Print</span></a>';
+	                    	LinkAccess = '<a href="#" id="'+cellInfo.data.NoTransaksi+'" class = "Change" onClick="ChangeStatus('+cellInfo.data.NoTransaksi+')"><span class="date badge badge-important">Update Status</span></a><br>';
 		                    cellElement.append(LinkAccess);
 		                }
 	                },
@@ -669,4 +748,10 @@
 		  });
 		}
 	});
+
+	function ChangeStatus(NoTransaksi) {
+		// ModalStatus
+		$("#NoTransaksi").val(NoTransaksi);
+		$('#ModalStatus').modal('show');
+	}
 </script>

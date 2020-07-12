@@ -31,7 +31,16 @@ class Trx_penjualan extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array(),'datadetail'=>array());
 
 		$sql = "SELECT 
-					a.*,b.NamaCustomer
+					a.*,b.NamaCustomer,
+					CASE WHEN a.`Status` = 1 THEN 'Ordered' ELSE
+						CASE WHEN a.`Status` = 2 THEN 'Di Proses' ELSE 
+							CASE WHEN a.`Status` = 3 THEN 'Di Kirim' ELSE 
+								CASE WHEN a.`Status` = 4 THEN 'Selesai' ELSE 
+									CASE WHEN a.`Status` = 5 THEN 'Cancel' ELSE 'Unknown' END
+								END
+							END
+						END
+					END DescStatus
 				FROM penjualanheader a 
 				LEFT JOIN tcustomer b on a.KodeCustomer = b.KodeCustomer
 				";
@@ -170,6 +179,81 @@ class Trx_penjualan extends CI_Controller {
 		// 	$data['success'] = false;
 		// 	$data['message'] = "Invalid Form Type";
 		// }
+		echo json_encode($data);
+	}
+	public function TransactionUpdate()
+	{
+		$data = array('success' => false ,'message'=>array());
+
+		$saved = false;
+
+		$NoTransaksi = $this->input->post('	NoTransaksi');
+		$Status = $this->input->post('Status');
+
+		$StatusX = "";
+		switch ($Status) {
+			case '1':
+				$StatusX = "Ordered";
+				break;
+			case '2':
+				$StatusX = "Di Proses";
+				break;
+			case '3':
+				$StatusX = "Di Kirim";
+				break;
+			case '4':
+				$StatusX = "Selesai";
+				break;
+			case '5':
+				$StatusX = "Cancel";
+				break;
+			default:
+				$StatusX = "";
+				break;
+		}
+
+		$param = array(
+			'NoTransaksi'		=> $NoTransaksi,
+			'TanggalPencatatan'	=> Date("Y-m-d h:i:sa"),
+			'Status'			=> $StatusX
+		);
+
+		$x = $this->ModelsExecuteMaster->FindData(array('NoTransaksi'=>$NoTransaksi),'penjualanheader');
+
+		if ($x->row()->Status != $Status) {
+			try {
+				$this->db->trans_begin();
+				$rs = $this->ModelsExecuteMaster->ExecInsert($param,'transactionStatus');
+				if ($rs) {
+					$update = $this->ModelsExecuteMaster->ExecUpdate(array('Status'=>$Status),array('NoTransaksi'=>$NoTransaksi),'penjualanheader');
+					if ($update) {
+						$saved = true;
+					}
+					else{
+						$saved = false;
+						$data['message'] = "Gagal Update Status";
+					}
+				}
+				else{
+					$saved = false;
+					$data['message'] = "Gagal insert Loging";
+				}
+
+				if ($saved) {
+					$this->db->trans_commit();
+					$data['success'] = true;
+				}
+				else{
+					goto jump;
+				}
+			} catch (Exception $e) {
+				jump:
+				$this->db->trans_rollback();
+			}
+		}
+		else{
+			$data['message'] = "Sudah Terupdate";
+		}
 		echo json_encode($data);
 	}
 }
