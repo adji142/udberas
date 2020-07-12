@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 12, 2020 at 09:10 PM
+-- Generation Time: Jul 12, 2020 at 10:40 PM
 -- Server version: 10.3.22-MariaDB-1
 -- PHP Version: 7.4.5
 
@@ -25,6 +25,56 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pembeliandetail`
+--
+
+CREATE TABLE `pembeliandetail` (
+  `RowID` varchar(255) NOT NULL,
+  `HeaderID` varchar(255) NOT NULL,
+  `KodeItem` varchar(15) NOT NULL,
+  `NamaItem` varchar(255) NOT NULL,
+  `QtyBeli` decimal(16,2) NOT NULL,
+  `HargaBeli` double(16,2) NOT NULL,
+  `Createdby` varchar(255) NOT NULL,
+  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE current_timestamp(6)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+
+--
+-- Dumping data for table `pembeliandetail`
+--
+
+INSERT INTO `pembeliandetail` (`RowID`, `HeaderID`, `KodeItem`, `NamaItem`, `QtyBeli`, `HargaBeli`, `Createdby`, `Createdon`) VALUES
+('2ddad022-94ba-4f07-aba3-3db84aabf23c', 'feebcdbe-d10a-4490-9397-ade021eb0416', '100.0002', 'Beras C4 10KG', '35.00', 3000.00, 'admin', '2020-07-12 10:39:53.000000'),
+('5470af5b-af83-415a-99e0-168c98a27f3a', 'feebcdbe-d10a-4490-9397-ade021eb0416', '100.0001', 'Beras C4 5KG', '25.00', 3500.00, 'admin', '2020-07-12 10:39:53.000000'),
+('b3d37ec6-69b1-439c-b185-cec52b28b0c9', 'b7631a89-e143-46c0-a94c-7b297e8dd67b', '100.0001', 'Beras C4 5KG', '1.00', 3500.00, 'admin', '2020-07-12 10:39:13.000000');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pembelianheader`
+--
+
+CREATE TABLE `pembelianheader` (
+  `RowID` varchar(255) NOT NULL,
+  `NoTransaksi` varchar(50) NOT NULL,
+  `TglTransaksi` datetime(6) NOT NULL,
+  `KodeVendor` varchar(15) NOT NULL,
+  `printed` bit(1) NOT NULL DEFAULT b'0',
+  `Createdby` varchar(255) NOT NULL,
+  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE current_timestamp(6)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+
+--
+-- Dumping data for table `pembelianheader`
+--
+
+INSERT INTO `pembelianheader` (`RowID`, `NoTransaksi`, `TglTransaksi`, `KodeVendor`, `printed`, `Createdby`, `Createdon`) VALUES
+('b7631a89-e143-46c0-a94c-7b297e8dd67b', '2202060001', '2020-07-12 00:00:00.000000', 'VC001 ', b'0', 'admin', '2020-07-12 10:39:13.000000'),
+('feebcdbe-d10a-4490-9397-ade021eb0416', '2202060002', '2020-07-12 00:00:00.000000', 'VC001 ', b'0', 'admin', '2020-07-12 10:39:52.000000');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `penjualandetail`
 --
 
@@ -36,7 +86,7 @@ CREATE TABLE `penjualandetail` (
   `QtyJual` decimal(16,2) NOT NULL,
   `HargaJual` double(16,2) NOT NULL,
   `Createdby` varchar(255) NOT NULL,
-  `Createdon` datetime(6) NOT NULL  ON UPDATE current_timestamp(6)
+  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE current_timestamp(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
@@ -75,7 +125,7 @@ CREATE TABLE `penjualanheader` (
   `printed` bit(1) NOT NULL DEFAULT b'0',
   `Status` int(11) NOT NULL COMMENT '1: Ordered, 2: DiProses, 3: Dikirim, 4: Selesai, 5: Cancel',
   `Createdby` varchar(255) NOT NULL,
-  `Createdon` datetime(6) NOT NULL  ON UPDATE current_timestamp(6)
+  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE current_timestamp(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
@@ -83,7 +133,7 @@ CREATE TABLE `penjualanheader` (
 --
 
 INSERT INTO `penjualanheader` (`RowID`, `NoTransaksi`, `TglTransaksi`, `KodeCustomer`, `CustomerSource`, `printed`, `Status`, `Createdby`, `Createdon`) VALUES
-('136012bf-e3ef-437a-8a32-770d89e3a93e', '1202060006', '2020-07-11 00:00:00.000000', 'CL0001 ', 1, b'0', 1, 'admin', '2020-07-11 06:55:34.000000'),
+('136012bf-e3ef-437a-8a32-770d89e3a93e', '1202060006', '2020-07-11 00:00:00.000000', 'CL0001 ', 1, b'0', 3, 'admin', '2020-07-12 21:36:37.515762'),
 ('420934da-bae8-4064-836e-87b9b9768b3a', '1202060008', '2020-07-11 00:00:00.000000', 'CL0001 ', 1, b'0', 1, 'admin', '2020-07-11 06:58:18.000000'),
 ('71e38865-e83f-44b2-b130-258f139946e3', '1202060003', '2020-07-11 00:00:00.000000', 'CL0001 ', 1, b'0', 1, 'admin', '2020-07-11 06:48:23.000000'),
 ('7d28b9eb-d868-4468-ad40-8b80f93d64eb', '1202060001', '2020-07-11 00:00:00.000000', '', 1, b'0', 1, 'admin', '2020-07-11 06:45:37.000000'),
@@ -121,17 +171,18 @@ INSERT INTO `permission` (`id`, `permissionname`, `link`, `ico`, `menusubmenu`, 
 (1, 'Master', NULL, 'icon-briefcase\n', '0', b'1', b'0', 0, b'1', NULL, NULL, NULL),
 (2, 'Master Item', 'item', NULL, '1', b'1', b'0', 1, b'1', NULL, NULL, NULL),
 (3, 'Master Pelanggan', 'customer', NULL, '1', b'1', b'0', 2, b'1', NULL, NULL, NULL),
-(4, 'User', NULL, NULL, '1', b'1', b'0', 3, b'1', NULL, NULL, NULL),
+(4, 'User', NULL, NULL, '1', b'1', b'0', 4, b'1', NULL, NULL, NULL),
 (5, 'Transaksi', NULL, 'icon-pencil', '0', b'1', b'0', 10, b'1', NULL, NULL, NULL),
 (6, 'Penjualan', 'penjualan', NULL, '5', b'1', b'0', 11, b'1', NULL, NULL, NULL),
-(7, 'Pembelian', NULL, NULL, '5', b'1', b'0', 12, b'1', NULL, NULL, NULL),
+(7, 'Pembelian', 'pembelian', NULL, '5', b'1', b'0', 12, b'1', NULL, NULL, NULL),
 (8, 'Produksi', NULL, NULL, '5', b'1', b'0', 13, b'1', NULL, NULL, NULL),
 (9, 'Informasi', NULL, 'icon-info-sign', '0', b'1', b'1', 20, b'1', NULL, NULL, NULL),
 (10, 'Stock Beras', NULL, NULL, '9', b'1', b'1', 21, b'1', NULL, NULL, NULL),
 (11, 'Laporan', NULL, 'icon-paper-clip', '0', b'1', b'1', 25, b'1', NULL, NULL, NULL),
 (12, 'Persediaan Beras', NULL, NULL, '11', b'1', b'1', 26, b'1', NULL, NULL, NULL),
 (13, 'Penjualan', NULL, NULL, '11', b'1', b'1', 27, b'1', NULL, NULL, NULL),
-(14, 'Pembelian', NULL, NULL, '11', b'1', b'1', 28, b'1', NULL, NULL, NULL);
+(14, 'Pembelian', 'pembelian', NULL, '11', b'1', b'1', 28, b'1', NULL, NULL, NULL),
+(15, 'Master Vendor', 'vendor', NULL, '1', b'1', b'0', 3, b'1', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -162,7 +213,8 @@ INSERT INTO `permissionrole` (`roleid`, `permissionid`) VALUES
 (1, 11),
 (1, 12),
 (1, 13),
-(1, 14);
+(1, 14),
+(1, 15);
 
 -- --------------------------------------------------------
 
@@ -201,7 +253,7 @@ CREATE TABLE `tcustomer` (
   `NoTlp` varchar(15) NOT NULL,
   `Source` int(11) NOT NULL COMMENT '1: append, 2 : ecomers',
   `Createdby` varchar(255) NOT NULL,
-  `Createdon` datetime(6) NOT NULL  ON UPDATE current_timestamp(6),
+  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE current_timestamp(6),
   `isActive` bit(1) NOT NULL DEFAULT b'1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
@@ -223,7 +275,7 @@ CREATE TABLE `titem` (
   `ItemName` varchar(255) NOT NULL,
   `ItemGroup` int(11) NOT NULL DEFAULT 1,
   `Createdby` varchar(255) NOT NULL,
-  `Createdon` datetime(6) NOT NULL  ON UPDATE current_timestamp(6),
+  `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE current_timestamp(6),
   `isActive` bit(1) NOT NULL DEFAULT b'1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
@@ -247,6 +299,37 @@ CREATE TABLE `transactionStatus` (
   `TanggalPencatatan` datetime NOT NULL,
   `Status` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `transactionStatus`
+--
+
+INSERT INTO `transactionStatus` (`id`, `NoTransaksi`, `TanggalPencatatan`, `Status`) VALUES
+(1, '1202060006', '2020-07-12 09:36:28', 'Di Proses'),
+(2, '1202060006', '2020-07-12 09:36:37', 'Di Kirim');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tvendor`
+--
+
+CREATE TABLE `tvendor` (
+  `id` int(11) NOT NULL,
+  `KodeVendor` varchar(25) NOT NULL,
+  `NamaVendor` varchar(100) NOT NULL,
+  `AlamatVendor` varchar(255) NOT NULL,
+  `TlpVendor` varchar(15) NOT NULL,
+  `isActive` bit(1) NOT NULL DEFAULT b'1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tvendor`
+--
+
+INSERT INTO `tvendor` (`id`, `KodeVendor`, `NamaVendor`, `AlamatVendor`, `TlpVendor`, `isActive`) VALUES
+(1, 'VC001', 'Petani X', 'Solo 2', '081325958258', b'1'),
+(2, 'VC002', 'Test tambah', 'xx', 'xxxx', b'0');
 
 -- --------------------------------------------------------
 
@@ -304,6 +387,18 @@ INSERT INTO `users` (`id`, `username`, `nama`, `password`, `createdby`, `created
 --
 
 --
+-- Indexes for table `pembeliandetail`
+--
+ALTER TABLE `pembeliandetail`
+  ADD PRIMARY KEY (`RowID`) USING BTREE;
+
+--
+-- Indexes for table `pembelianheader`
+--
+ALTER TABLE `pembelianheader`
+  ADD PRIMARY KEY (`RowID`) USING BTREE;
+
+--
 -- Indexes for table `penjualandetail`
 --
 ALTER TABLE `penjualandetail`
@@ -346,6 +441,12 @@ ALTER TABLE `transactionStatus`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tvendor`
+--
+ALTER TABLE `tvendor`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `userrole`
 --
 ALTER TABLE `userrole`
@@ -365,7 +466,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `permission`
 --
 ALTER TABLE `permission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -383,7 +484,13 @@ ALTER TABLE `tcustomer`
 -- AUTO_INCREMENT for table `transactionStatus`
 --
 ALTER TABLE `transactionStatus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tvendor`
+--
+ALTER TABLE `tvendor`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`

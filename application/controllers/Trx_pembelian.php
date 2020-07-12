@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Trx_penjualan extends CI_Controller {
+class Trx_pembelian extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -31,18 +31,9 @@ class Trx_penjualan extends CI_Controller {
 		$data = array('success' => false ,'message'=>array(),'data' => array(),'datadetail'=>array());
 
 		$sql = "SELECT 
-					a.*,b.NamaCustomer,
-					CASE WHEN a.`Status` = 1 THEN 'Ordered' ELSE
-						CASE WHEN a.`Status` = 2 THEN 'Di Proses' ELSE 
-							CASE WHEN a.`Status` = 3 THEN 'Di Kirim' ELSE 
-								CASE WHEN a.`Status` = 4 THEN 'Selesai' ELSE 
-									CASE WHEN a.`Status` = 5 THEN 'Cancel' ELSE 'Unknown' END
-								END
-							END
-						END
-					END DescStatus
-				FROM penjualanheader a 
-				LEFT JOIN tcustomer b on a.KodeCustomer = b.KodeCustomer
+					a.*,b.NamaVendor
+				FROM pembelianheader a 
+				LEFT JOIN tvendor b on a.KodeVendor = b.KodeVendor
 				";
 		$rs = $this->db->query($sql);
 
@@ -67,7 +58,7 @@ class Trx_penjualan extends CI_Controller {
 		$RowID 			= $this->input->post('RowID');
 		$NoTransaksi	= $this->input->post('NoTransaksi');
 		$TglTransaksi	= $this->input->post('TglTransaksi');
-		$KodeCustomer	= $this->input->post('KodeCustomer');
+		$KodeVendor		= $this->input->post('KodeVendor');
 		$CustomerSource	= 1;//$this->input->post('CustomerSource');
 		$printed		= 0;
 		$Status			= $this->input->post('Status');
@@ -77,12 +68,12 @@ class Trx_penjualan extends CI_Controller {
 		$HeaderID 		= $this->input->post('HeaderID');
 		$KodeItem 		= $this->input->post('KodeItem');
 		$NamaItem 		= $this->input->post('NamaItem');
-		$QtyJual 		= $this->input->post('QtyJual');
-		$HargaJual 		= $this->input->post('HargaJual');
+		$QtyBeli 		= $this->input->post('QtyBeli');
+		$HargaBeli 		= $this->input->post('HargaBeli');
 
 		$Createdby = $this->session->userdata('NamaUser');
 		$Createdon = date("Y-m-d h:i:sa");
-		$exploder_Customer = explode("|",$KodeCustomer);
+		$exploder_Customer = explode("|",$KodeVendor);
 
 		$id = $this->input->post('id');
 		$formtype = $this->input->post('formtype');
@@ -91,10 +82,8 @@ class Trx_penjualan extends CI_Controller {
 			'RowID' 			=> $RowID,
 			'NoTransaksi' 		=> $NoTransaksi,
 			'TglTransaksi' 		=> $TglTransaksi,
-			'KodeCustomer' 		=> $exploder_Customer[0],
-			'CustomerSource' 	=> $CustomerSource,
+			'KodeVendor' 		=> $exploder_Customer[0],
 			'printed' 			=> $printed,
-			'Status' 			=> 1,
 			'Createdby' 		=> $Createdby,
 			'Createdon' 		=> $Createdon
 		);
@@ -104,15 +93,15 @@ class Trx_penjualan extends CI_Controller {
 			'HeaderID' 			=> $HeaderID,
 			'KodeItem' 			=> $KodeItem,
 			'NamaItem' 			=> $NamaItem,
-			'QtyJual' 			=> $QtyJual,
-			'HargaJual' 		=> $HargaJual,
+			'QtyBeli' 			=> $QtyBeli,
+			'HargaBeli' 		=> $HargaBeli,
 			'Createdby' 		=> $Createdby,
 			'Createdon' 		=> $Createdon
 		);
 		$this->db->trans_begin();
 			try {
 				if ($table == 'header') {
-					$rsheader = $this->ModelsExecuteMaster->ExecInsert($paramheader,'penjualanheader');
+					$rsheader = $this->ModelsExecuteMaster->ExecInsert($paramheader,'pembelianheader');
 					if ($rsheader) {
 						$flagsuccess = true;
 					}
@@ -122,7 +111,7 @@ class Trx_penjualan extends CI_Controller {
 					}
 				}
 				elseif ($table == 'detail') {
-					$rsdetail = $this->ModelsExecuteMaster->ExecInsert($paramDetail,'penjualandetail');
+					$rsdetail = $this->ModelsExecuteMaster->ExecInsert($paramDetail,'pembeliandetail');
 					if ($rsdetail) {
 						$flagsuccess = true;
 					}

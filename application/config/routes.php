@@ -56,3 +56,5 @@ $route['translate_uri_dashes'] = FALSE;
 $route['item'] = 'Home/item';
 $route['customer'] = 'Home/customer';
 $route['penjualan'] = 'Home/penjualan';
+$route['vendor'] = 'Home/vendor';
+$route['pembelian'] = 'Home/pembelian';
