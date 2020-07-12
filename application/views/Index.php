@@ -22,7 +22,7 @@
     <body>
         <div id="loginbox">            
             <form id="loginform" class="form-vertical" action="index.html">
-				 <div class="control-group normal_text"> <h3>DOWNSTORE</h3></div>
+				 <div class="control-group normal_text"> <h3>UD BERAS SANDY</h3></div>
                 <div class="control-group">
                     <div class="controls">
                         <div class="main_input_box">
