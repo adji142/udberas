@@ -202,4 +202,21 @@ class Apps extends CI_Controller {
 
 		echo json_encode($data);
 	}
+	public function GetPersediaan()
+	{
+		$data = array('success' => false ,'message'=>array(),'data'=>array());
+
+		$ItemCode = $this->input->post('ItemCode');
+
+		$SQL = "CALL fn_GetStock('".$ItemCode."')";
+
+		$rs = $this->db->query($SQL);
+
+		if ($rs->num_rows() > 0) {
+			$data['data'] = $rs->result();
+			$data['success'] = true;
+			# code...
+		}
+		echo json_encode($data);
+	}
 }

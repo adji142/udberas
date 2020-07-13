@@ -89,6 +89,7 @@
 	    	</form>
 	    	<br>
 	    	<h3><center>Pemakaian Bahan</center></h3>
+	    	<h4><div id="error_alert"></div></h4>
 	    	<div id="gridContainer_Detail">
         	
         	</div>
@@ -207,11 +208,13 @@
 			var QtyJual;
 			if (gridItems!= '[]') {
 				$.each(gridItems,function (k,v) {
+					var bahanid = uuidv4();
 					if (row == 'bahan') {
 						$.ajax({
+							async:false,
 							type: "post",
 					        url: "<?=base_url()?>Trx_produksi/CRUD",
-					        data: {'RowID':rowid,NoTransaksi:$('#NoTransaksi').val(),'TglTransaksi':$('#TglTransaksi').val(),'KodeItemRM':v.KodeItemRM,'NamaItemRM':v.NamaItemRM,'QtyIssue':v.QtyIssue,'table':row},
+					        data: {'RowID':bahanid,NoTransaksi:$('#NoTransaksi').val(),'TglTransaksi':$('#TglTransaksi').val(),'KodeItemRM':v.KodeItemRM,'NamaItemRM':v.NamaItemRM,'QtyIssue':v.QtyIssue,'table':row},
 					        dataType: "json",
 					        success: function (response) {
 					        	if (response.success==true) {
@@ -219,6 +222,7 @@
 						        	if (x == gridItems.length) {
 						        		row = 'hasil';
 						        		$.ajax({
+						        			async:false,
 						        			type: "post",
 									        url: "<?=base_url()?>Trx_produksi/CRUD",
 									        data: {'RowID':rowid,NoTransaksi:$('#NoTransaksi').val(),'TglTransaksi':$('#TglTransaksi').val(),'KodeItemFG':$('#KodeItemFG').val(),'QtyFG':$('#QtyFG').val(),'table':row},
@@ -237,34 +241,48 @@
 
 									        	}
 									        	else{
-									        		$('#modal_').modal('toggle');
-											    		Swal.fire({
-											              type: 'success',
-											              title: 'Horray...',
-											              text: response2.message,
-											              // footer: '<a href>Why do I have this issue?</a>'
-											            }).then((result)=>{
-											              $('#modal_').modal('show');
-											              $('#btn_Save').text('Simpan');
-			   											  $('#btn_Save').attr('disabled',false);
-											            });
+									        		// error_alert
+									        		$('#error_alert').html("Error!!. "+response2.message+"");
+									        		$('#btn_Save').text('Simpan');
+		   											$('#btn_Save').attr('disabled',false);
+									       //  		$('#modal_').modal('toggle');
+										    		// Swal.fire({
+										      //         type: 'success',
+										      //         title: 'Horray...',
+										      //         text: response2.message,
+										      //         onOpen: function () {
+										      //         	console.log("open");
+										      //         	return true;
+										      //         }
+										      //         // footer: '<a href>Why do I have this issue?</a>'
+										      //       }).then((result)=>{
+										      //         $('#modal_').modal('show');
+										      //         $('#btn_Save').text('Simpan');
+		   											//   $('#btn_Save').attr('disabled',false);
+										      //       });
+										            // return true;
+											        
 									        	}
 									        }
 						        		});
 						        	}
 					        	}
 					        	else{
-					        		$('#modal_').modal('toggle');
-						    		Swal.fire({
-						              type: 'success',
-						              title: 'Horray...',
-						              text: response.message,
-						              // footer: '<a href>Why do I have this issue?</a>'
-						            }).then((result)=>{
-						              $('#modal_').modal('show');
-						              $('#btn_Save').text('Simpan');
-									  $('#btn_Save').attr('disabled',false);
-						            });
+					        		$('#error_alert').html("Error!!. "+response.message+"");
+					        		$('#btn_Save').text('Simpan');
+		   							$('#btn_Save').attr('disabled',false);
+					      //   		$('#modal_').modal('toggle');
+						    	// 	Swal.fire({
+						     //          type: 'success',
+						     //          title: 'Horray...',
+						     //          text: response.message,
+						     //          // footer: '<a href>Why do I have this issue?</a>'
+						     //        }).then((result)=>{
+						     //          $('#modal_').modal('show');
+						     //          $('#btn_Save').text('Simpan');
+									  // $('#btn_Save').attr('disabled',false);
+						     //        });
+						     //        return true;
 					        	}
 					        }
 						});

@@ -58,7 +58,7 @@ class Trx_produksi extends CI_Controller {
 		$NamaItemRM 	= $this->input->post('NamaItemRM');
 		$QtyIssue 		= $this->input->post('QtyIssue');
 		$Createdby 		= $this->session->userdata('NamaUser');
-		$Createdon 		= date("Y-m-d h:i:sa");
+		$Createdon 		= date("Y-m-d h:i:s");
 		$exploder_KodeItemRM = explode("|",$KodeItemRM);
 
 		// Detail
@@ -68,7 +68,6 @@ class Trx_produksi extends CI_Controller {
 		$KodeItemFG 		= $this->input->post('KodeItemFG');
 		$QtyFG 				= $this->input->post('QtyFG');
 
-		$exploder_KodeItemFG 	= explode("|",$KodeItemFG);
 		// var_dump($exploder_KodeItemFG);
 
 		$id = $this->input->post('id');
@@ -87,7 +86,30 @@ class Trx_produksi extends CI_Controller {
 		$this->db->trans_begin();
 			try {
 				if ($table == 'bahan') {
-					$Q_stockbahan = "CALL fn_GetStock('".$KodeItemRM."')";
+					$Q_stockbahan = "
+							SELECT 
+								a.KodeItem,a.KodeItem,
+								SUM(a.QtyBeli) - SUM(a.QtyJual) + SUM(a.QtyHasil) - SUM(a.QtyPemakaian) AS Stock
+							FROM (
+
+								SELECT a.KodeItem,a.NamaItem,a.QtyBeli, 0 QtyJual,0 QtyHasil,0 QtyPemakaian FROM pembeliandetail a
+
+								UNION ALL
+
+								SELECT b.KodeItem,b.NamaItem,0 , b.QtyJual ,0 , 0 FROM penjualandetail b
+
+								UNION ALL
+
+								SELECT c.KodeItemFG,c.NamaItemFG,0,0,c.QtyFG,0 FROM hasilproduksi c
+
+								UNION ALL
+
+								SELECT d.KodeItemRM,d.NamaItemRM,0,0,0,d.QtyIssue FROM pemakaianbahan d
+
+							) a
+						    WHERE (a.KodeItem = '".$KodeItemRM."')
+							GROUP BY a.KodeItem;
+					";
 
 					$stockbahan = $this->db->query($Q_stockbahan)->row();
 
@@ -107,9 +129,9 @@ class Trx_produksi extends CI_Controller {
 					}
 				}
 				elseif ($table == 'hasil') {
+					$exploder_KodeItemFG 	= explode("|",$KodeItemFG);
 					$paramhasil = array(
 						'RowID'				=> $RowID,
-						'PemakaianBahanID'	=> $PemakaianBahanID,
 						'NoTransaksi'		=> $NoTransaksi,
 						'TglTransaksi'		=> $TglTransaksi,
 						'KodeItemFG'		=> $exploder_KodeItemFG[0],
