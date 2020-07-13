@@ -30,7 +30,7 @@ class Mstr_Item extends CI_Controller {
 	{
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 
-		$id = $this->input->post('id');
+		$id = $this->input->post('ItemCode');
 
 		if ($id == '') {
 			$rs = $this->ModelsExecuteMaster->FindData(array('isActive'=>1),'titem');

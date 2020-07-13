@@ -633,7 +633,7 @@
 							$.ajax({
 								type    :'post',
 							    url     : '<?=base_url()?>Mstr_Item/read',
-							    data    : {'id':kode},
+							    data    : {'ItemCode':kode},
 							    dataType: 'json',
 							    success:function (response) {
 							    	if (response.data.length > 0) {

@@ -51,4 +51,8 @@ class home extends CI_Controller {
 	{
 		$this->load->view('pembelian');
 	}
+	public function produksi()
+	{
+		$this->load->view('produksi');
+	}
 }
