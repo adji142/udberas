@@ -57,6 +57,22 @@
 	    				<input type="text" name="ItemName" id="ItemName" required="" placeholder="Nama Item">
 	    			</div>
 	    		</div>
+	    		<div class="control-group">
+	    			<label class="control-label">Satuan</label>
+	    			<div class="controls">
+	    				<input type="text" name="Satuan" id="Satuan" required="" placeholder="Satuan">
+	    			</div>
+	    		</div>
+	    		<div class="control-group">
+                    <label class="control-label">Foto</label>
+                    <div class="controls">
+                        <input type="file" id="bannerimage" name="bannerimage" />
+			              <img src="" id="profile-img-tag" width="200" />
+			              <span class="help-block">Max Resolution 800 x 600</span>
+			              <textarea id="Image" name="Image" style="display: none;"></textarea>
+			              <!-- display: none; -->
+                    </div>
+                </div>
 	            <!-- <div class="control-group">
 	    			<label class="control-label">Group Item</label>
 	    			<div class="controls">
@@ -78,6 +94,7 @@
 
 <script type="text/javascript">
 	$(function () {
+		var _URL = window.URL || window.webkitURL;
         $(document).ready(function () {
         	var where_field = '';
         	var where_value = '';
@@ -147,12 +164,50 @@
           			console.log(v.KelompokUsaha);
 		            $('#ItemCode').val(v.ItemCode);
 					$('#ItemName').val(v.ItemName);
-
+					$('#Satuan').val(v.Satuan);
+					$('#Image').val(v.Image);
 					$('#formtype').val("edit");
 		          });
 	          }
 	        });
-        })
+        });
+        $("#bannerimage").change(function(){
+	      var file = $(this)[0].files[0];
+	      img = new Image();
+	      img.src = _URL.createObjectURL(file);
+	      var imgwidth = 0;
+	      var imgheight = 0;
+	      img.onload = function () {
+	        imgwidth = this.width;
+	        imgheight = this.height;
+	        $('#width').val(imgwidth);
+	        $('#height').val(imgheight);
+	      }
+	      readURL(this);
+	      encodeImagetoBase64(this);
+	      // alert("Current width=" + imgwidth + ", " + "Original height=" + imgheight);
+	    });
+	    function readURL(input) {
+		    if (input.files && input.files[0]) {
+		      var reader = new FileReader();
+		        
+		      reader.onload = function (e) {
+		          $('#profile-img-tag').attr('src', e.target.result);
+		      }
+		      reader.readAsDataURL(input.files[0]);
+		    }
+		}
+		function encodeImagetoBase64(element) {
+		    $('#Image').val('');
+		    var file = element.files[0];
+		    var reader = new FileReader();
+		    reader.onloadend = function() {
+		        // $(".link").attr("href",reader.result);
+		        // $(".link").text(reader.result);
+		    	$('#Image').val(reader.result);
+		    }
+		    reader.readAsDataURL(file);
+		}
 		function GetData(id) {
 			var where_field = 'id';
         	var where_value = id;
@@ -167,7 +222,8 @@
           			console.log(v.KelompokUsaha);
 		            $('#ItemCode').val(v.ItemCode);
 					$('#ItemName').val(v.ItemName);
-
+					$('#Satuan').val(v.Satuan);
+					$('#Image').val(v.Image);
 					$('#formtype').val("edit");
 
 					$('#modal_').modal('show');

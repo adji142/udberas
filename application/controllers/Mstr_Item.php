@@ -55,6 +55,8 @@ class Mstr_Item extends CI_Controller {
 		$ItemCode = $this->input->post('ItemCode');
 		$ItemName = $this->input->post('ItemName');
 		// $ItemGroup = $this->input->post('ItemGroup');
+		$Satuan	= $this->input->post('Satuan');
+		$Image = $this->input->post('Image');
 		$Createdby = $this->session->userdata('NamaUser');
 		$Createdon = date("Y-m-d h:i:sa");
 
@@ -68,7 +70,9 @@ class Mstr_Item extends CI_Controller {
 			'ItemName'	=> $ItemName,
 			// 'ItemGroup'	=> $ItemGroup,
 			'Createdby'	=> $Createdby,
-			'Createdon'	=> $Createdon
+			'Createdon'	=> $Createdon,
+			'Satuan'	=> $Satuan,
+			'Image'		=> $Image
 		);
 		if ($formtype == 'add') {
 			$this->db->trans_begin();
