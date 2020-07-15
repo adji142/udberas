@@ -59,4 +59,8 @@ class home extends CI_Controller {
 	{
 		$this->load->view('persediaanbarang');
 	}
+	public function user()
+	{
+		$this->load->view('masterUser');
+	}
 }

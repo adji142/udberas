@@ -60,3 +60,4 @@ $route['vendor'] = 'Home/vendor';
 $route['pembelian'] = 'Home/pembelian';
 $route['produksi'] = '/Home/produksi';
 $route['persediaan'] = '/Home/persediaan';
+$route['user'] = '/Home/user';

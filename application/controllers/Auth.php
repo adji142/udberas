@@ -143,4 +143,114 @@ class Auth extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+	public function GetUser()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' => array());
+
+		$Username = $this->input->post('Username');
+
+		$SQL = "SELECT 
+					a.id,a.username,a.nama,c.id roleid,c.rolename
+				FROM users a
+				LEFT JOIN userrole b on a.id = b.userid
+				LEFT JOIN roles c on b.roleid = c.id ";
+
+		if ($Username != '') {
+			$SQL .= " Where a.username = '".$Username."' ";
+		}
+		$rs = $this->db->query($SQL);
+
+		if ($rs->num_rows() > 0) {
+			$data['success'] = true;
+			$data['data'] = $rs->result();
+		}
+		echo json_encode($data);
+	}
+	public function addUsers()
+	{
+		$data = array('success' => false ,'message'=>array(),'data' =>array());
+
+		$Username		= $this->input->post('Username');
+		$Password		= $this->input->post('Password');
+		$tipe 			= $this->input->post('tipe');
+		$nama 			= $this->input->post('nama');
+		// $akses			= $this->input->post('akses');
+
+		$formtype 		= $this->input->post('formtype');
+		$id 			= $this->input->post('id');
+
+		if ($formtype == 'add') {
+			$param = array(
+				'username'	=> $Username,
+				'password'	=> $this->encryption->encrypt($Password),
+				'nama'		=> $nama
+			);
+			try {
+				$rs = $this->ModelsExecuteMaster->ExecInsert($param,'users');
+				$xuser = $this->ModelsExecuteMaster->FindData(array('username'=>$Username),'users');
+				if ($xuser->num_rows() > 0) {
+					switch ($tipe) {
+						case '2':
+							$insert = array(
+								'userid' 	=> $xuser->row()->id,
+								'roleid'	=> 2,
+							);
+							break;
+						case '3':
+							$insert = array(
+								'userid' 	=> $xuser->row()->id,
+								'roleid'	=> 3,
+							);
+							break;
+						case '4':
+							$insert = array(
+								'userid' 	=> $xuser->row()->id,
+								'roleid'	=> 4,
+							);
+							break;
+						case '5':
+							$insert = array(
+								'userid' 	=> $xuser->row()->id,
+								'roleid'	=> 5,
+							);
+							# code...
+							break;
+						case '6':
+							# code...
+							$insert = array(
+								'userid' 	=> $xuser->row()->id,
+								'roleid'	=> 6,
+							);
+							break;
+						default:
+							# code...
+							break;
+					}
+					
+					$call_x = $this->ModelsExecuteMaster->ExecInsert($insert,'userrole');
+					if ($call_x) {
+						$data['success'] = true;
+					}
+				}
+				$data['success'] = true;
+			} catch (Exception $e) {
+				$data['success'] = false;
+				$data['message'] = "Gagal memproses data ". $e->getMessage();
+			}
+		}
+		else{
+			$param = array(
+				'password'	=> $this->encryption->encrypt($Password)
+			);
+			try {
+				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('id'=> $id),'ttransaksi');
+				$data['success'] = true;
+			} catch (Exception $e) {
+				$data['success'] = false;
+				$data['message'] = "Gagal memproses data ". $e->getMessage();
+			}
+		}
+		echo json_encode($data);
+	}
+
 }

@@ -85,17 +85,17 @@
 		        columns: [
 		            {
 		                dataField: "KodeItem",
-		                caption: "Kode Customer",
+		                caption: "Kode Item",
 		                allowEditing:false
 		            },
 		            {
 		                dataField: "NamaItem",
-		                caption: "Nama Customer",
+		                caption: "Nama Item",
 		                allowEditing:false
 		            },
 		            {
 		                dataField: "Stock",
-		                caption: "Alamat",
+		                caption: "Stock",
 		                allowEditing:false
 		            }
 		        ],
