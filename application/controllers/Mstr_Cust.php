@@ -73,13 +73,47 @@ class Mstr_Cust extends CI_Controller {
 			'Createdby'		=> $Createdby,
 			'Createdon'		=> $Createdon
 		);
+
+		$paramuser = array(
+			'username'		=> $KodeCustomer,
+			'nama'			=> $NamaCustomer,
+			'password'		=> $this->encryption->encrypt($KodeCustomer),
+			'createdby'		=> $Createdby,
+			'createdon'		=> date("Y-m-d h:i:sa"),
+			'HakAkses'		=> 4
+		);
 		if ($formtype == 'add') {
 			$this->db->trans_begin();
 			try {
 				$rs = $this->ModelsExecuteMaster->ExecInsert($param,'tcustomer');
 				if ($rs) {
-					$this->db->trans_commit();
-					$data['success'] = true;
+					$adduser = $this->ModelsExecuteMaster->ExecInsert($paramuser,'users');
+					if ($adduser) {
+						$xuser = $this->ModelsExecuteMaster->FindData(array('username'=>$KodeCustomer),'users');
+						if ($xuser->num_rows() >0) {
+							$insert = array(
+								'userid' 	=> $xuser->row()->id,
+								'roleid'	=> 4,
+							);
+							$call_x = $this->ModelsExecuteMaster->ExecInsert($insert,'userrole');
+							if ($call_x) {
+								$this->db->trans_commit();
+								$data['success'] = true;
+							}
+							else{
+								$data['message'] = "Gagal Input Role";
+								goto jump;
+							}
+						}
+						else{
+							$data['message'] = "Username Tidakditemukan";
+							goto jump;
+						}
+					}
+					else{
+						$data['message'] = "Gagal Input User";
+						goto jump;
+					}
 				}
 				else{
 					$data['message'] = "Gagal Input Master Item";

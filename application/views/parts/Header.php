@@ -1,6 +1,10 @@
 <?php
   $user_id = $this->session->userdata('userid');
   $NamaUser = $this->session->userdata('NamaUser');
+  $NamaUser = $this->session->userdata('NamaUser');
+  $username = $this->session->userdata('username');
+  $HakAkses = $this->session->userdata('HakAkses');
+
   if($user_id == ''){
     echo "<script>location.replace('".base_url()."home');</script>";
   }

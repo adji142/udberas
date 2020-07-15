@@ -11,7 +11,7 @@
  Target Server Version : 100406
  File Encoding         : 65001
 
- Date: 14/07/2020 16:33:31
+ Date: 15/07/2020 19:11:53
 */
 
 SET NAMES utf8mb4;
@@ -127,6 +127,7 @@ CREATE TABLE `penjualandetail`  (
 -- ----------------------------
 -- Records of penjualandetail
 -- ----------------------------
+INSERT INTO `penjualandetail` VALUES ('18531b50-b05c-439b-8a8f-26d950e516bf', '569cdd1d-24c4-43cd-80fa-85e5c8498420', '100.0002', 'Beras C4 10KG', 1.00, 4500.00, 'Beras Merbabu', '2020-07-15 03:18:13.000000');
 INSERT INTO `penjualandetail` VALUES ('3041ead2-d9e6-4fe3-b159-3ca177c745a7', '420934da-bae8-4064-836e-87b9b9768b3a', '100.0002', 'Beras C4 10KG', 2.00, 4000.00, 'admin', '2020-07-11 06:58:18.000000');
 INSERT INTO `penjualandetail` VALUES ('4138907f-db62-410c-99a8-e6f4c8b61b9d', '136012bf-e3ef-437a-8a32-770d89e3a93e', '100.0002', 'Beras C4 10KG', 1.00, 4000.00, 'admin', '2020-07-11 06:55:34.000000');
 INSERT INTO `penjualandetail` VALUES ('4fcaf114-ad3e-4f4e-ac36-c6c0db89c80c', '87e5947f-095d-4fa7-94cb-178a6f116f7a', '100.0001', 'Beras C4 5KG', 2.00, 4000.00, 'admin', '2020-07-11 06:46:38.000000');
@@ -165,6 +166,7 @@ CREATE TABLE `penjualanheader`  (
 -- ----------------------------
 INSERT INTO `penjualanheader` VALUES ('136012bf-e3ef-437a-8a32-770d89e3a93e', '1202060006', '2020-07-11 00:00:00.000000', 'CL0001 ', 1, b'0', 3, 'admin', '2020-07-12 21:36:37.515762');
 INSERT INTO `penjualanheader` VALUES ('420934da-bae8-4064-836e-87b9b9768b3a', '1202060008', '2020-07-11 00:00:00.000000', 'CL0001 ', 1, b'0', 1, 'admin', '2020-07-11 06:58:18.000000');
+INSERT INTO `penjualanheader` VALUES ('569cdd1d-24c4-43cd-80fa-85e5c8498420', '1202060009', '2020-07-15 00:00:00.000000', 'CL0002 ', 1, b'0', 1, 'Beras Merbabu', '2020-07-15 03:18:13.000000');
 INSERT INTO `penjualanheader` VALUES ('71e38865-e83f-44b2-b130-258f139946e3', '1202060003', '2020-07-11 00:00:00.000000', 'CL0001 ', 1, b'0', 1, 'admin', '2020-07-11 06:48:23.000000');
 INSERT INTO `penjualanheader` VALUES ('7d28b9eb-d868-4468-ad40-8b80f93d64eb', '1202060001', '2020-07-11 00:00:00.000000', '', 1, b'0', 1, 'admin', '2020-07-11 06:45:37.000000');
 INSERT INTO `penjualanheader` VALUES ('87e5947f-095d-4fa7-94cb-178a6f116f7a', '1202060002', '2020-07-11 00:00:00.000000', 'CL0001 ', 1, b'0', 1, 'admin', '2020-07-11 06:46:38.000000');
@@ -190,7 +192,7 @@ CREATE TABLE `permission`  (
   `MobileRoute` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `MobileLogo` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of permission
@@ -210,6 +212,7 @@ INSERT INTO `permission` VALUES (12, 'Persediaan Beras', NULL, NULL, '11', b'1',
 INSERT INTO `permission` VALUES (13, 'Penjualan', NULL, NULL, '11', b'1', b'1', 27, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (14, 'Pembelian', 'pembelian', NULL, '11', b'1', b'1', 28, b'1', NULL, NULL, NULL);
 INSERT INTO `permission` VALUES (15, 'Master Vendor', 'vendor', NULL, '1', b'1', b'0', 3, b'1', NULL, NULL, NULL);
+INSERT INTO `permission` VALUES (16, 'Order', 'penjualan', 'icon-pencil', '0', b'0', b'0', 14, b'1', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for permissionrole
@@ -238,6 +241,32 @@ INSERT INTO `permissionrole` VALUES (1, 12);
 INSERT INTO `permissionrole` VALUES (1, 13);
 INSERT INTO `permissionrole` VALUES (1, 14);
 INSERT INTO `permissionrole` VALUES (1, 15);
+INSERT INTO `permissionrole` VALUES (2, 1);
+INSERT INTO `permissionrole` VALUES (2, 2);
+INSERT INTO `permissionrole` VALUES (2, 3);
+INSERT INTO `permissionrole` VALUES (2, 4);
+INSERT INTO `permissionrole` VALUES (2, 5);
+INSERT INTO `permissionrole` VALUES (2, 6);
+INSERT INTO `permissionrole` VALUES (2, 7);
+INSERT INTO `permissionrole` VALUES (2, 8);
+INSERT INTO `permissionrole` VALUES (2, 9);
+INSERT INTO `permissionrole` VALUES (2, 10);
+INSERT INTO `permissionrole` VALUES (2, 11);
+INSERT INTO `permissionrole` VALUES (2, 12);
+INSERT INTO `permissionrole` VALUES (2, 13);
+INSERT INTO `permissionrole` VALUES (2, 14);
+INSERT INTO `permissionrole` VALUES (2, 15);
+INSERT INTO `permissionrole` VALUES (3, 5);
+INSERT INTO `permissionrole` VALUES (3, 6);
+INSERT INTO `permissionrole` VALUES (3, 9);
+INSERT INTO `permissionrole` VALUES (3, 10);
+INSERT INTO `permissionrole` VALUES (4, 16);
+INSERT INTO `permissionrole` VALUES (5, 9);
+INSERT INTO `permissionrole` VALUES (5, 10);
+INSERT INTO `permissionrole` VALUES (6, 5);
+INSERT INTO `permissionrole` VALUES (6, 8);
+INSERT INTO `permissionrole` VALUES (6, 9);
+INSERT INTO `permissionrole` VALUES (6, 10);
 
 -- ----------------------------
 -- Table structure for roles
@@ -274,12 +303,13 @@ CREATE TABLE `tcustomer`  (
   `Createdon` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000' ON UPDATE CURRENT_TIMESTAMP(6),
   `isActive` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`id`, `KodeCustomer`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tcustomer
 -- ----------------------------
 INSERT INTO `tcustomer` VALUES (1, 'CL0001', 'Solo Beras', 'Solo Surakarta 2', '081325058258', 1, 'admin', '2020-07-09 15:16:17.789027', b'1');
+INSERT INTO `tcustomer` VALUES (2, 'CL0002', 'Beras Merbabu', 'Solo', '081325058258', 1, 'admin', '2020-07-15 02:57:12.000000', b'1');
 
 -- ----------------------------
 -- Table structure for titem
@@ -359,6 +389,7 @@ CREATE TABLE `userrole`  (
 -- Records of userrole
 -- ----------------------------
 INSERT INTO `userrole` VALUES (14, 1);
+INSERT INTO `userrole` VALUES (74, 4);
 
 -- ----------------------------
 -- Table structure for users
@@ -379,7 +410,7 @@ CREATE TABLE `users`  (
   `email` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 74 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 75 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of users
@@ -389,6 +420,7 @@ INSERT INTO `users` VALUES (43, 'operator', 'Operator', 'a9bdd47d7321d4089b3b005
 INSERT INTO `users` VALUES (71, '1001', 'Prasetyo Aji Wibowo', 'c637abd9352a25c922463f7acc7b3a5f9328eba06ed17e6572a23b8cbdabb0a3c131c304d92c3b144077d08b83bea24e8523995d9e0a8d3c059c89d3526ea8f8HAx07QI6q7vgVWvh8bgR0FD4/Nox8aBN/4DFMRh9I9E=', 'admin', '2020-07-03 02:53:26', 2, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `users` VALUES (72, '1002', 'Bambang sukiryo', '2fab8327944504c22d9b8c85bc1d2be04ef81e4cb5eaea3ab1cbac561c05442e242fd7df31b5fcf49813aeb94f99a36302de884140b3b15415864a89e0f72a260D9/S7S/r5aU0t6xDZREZyZoTGQwVUccfVKmWIDL6tU=', 'admin', '2020-07-03 02:54:47', 2, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `users` VALUES (73, '200001', 'Ridho', '427713375014f3d4686a334f911c8506642bf46124642043eefbd969653e316f9cf05c28fa41663a3aa5981ff00ba80df9665b8d0358e5e2877f7c42470591feQDe7uWIfqSvmee0oAtRUwMHbPxpFETOXeMNK2ww1v0o=', 'admin', '2020-07-03 03:12:46', 3, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `users` VALUES (74, 'CL0002', 'Beras Merbabu', '737a35c9b148f22801975b67a7fef6e6bc1a02575492d357715b0d7659a3d86e3d7f4770984649ca6bf07c1e5b52de383fc4cdae9374843d1e8b5bb9c9def443yXi5OOJBDEpVZdcWF0530YM+YZ0AX8Tz0yWRDWEXOLo=', 'admin', '2020-07-15 02:57:12', 4, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Procedure structure for fn_GetStock

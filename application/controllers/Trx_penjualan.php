@@ -29,7 +29,7 @@ class Trx_penjualan extends CI_Controller {
 	public function read()
 	{
 		$data = array('success' => false ,'message'=>array(),'data' => array(),'datadetail'=>array());
-
+		$username = $this->session->userdata('username');
 		$sql = "SELECT 
 					a.*,b.NamaCustomer,
 					CASE WHEN a.`Status` = 1 THEN 'Ordered' ELSE
@@ -44,6 +44,12 @@ class Trx_penjualan extends CI_Controller {
 				FROM penjualanheader a 
 				LEFT JOIN tcustomer b on a.KodeCustomer = b.KodeCustomer
 				";
+
+		$rsx = $this->ModelsExecuteMaster->FindData(array('username'=>$username),'users');
+		// var_dump($username);
+		if ($rsx->row()->HakAkses == 4) {
+			$sql .= " WHERE a.KodeCustomer ='".$username."'";
+		}
 		$rs = $this->db->query($sql);
 
 		if ($rs->num_rows()>0) {

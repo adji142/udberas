@@ -3,6 +3,7 @@
     require_once(APPPATH."views/parts/Sidebar.php");
     $active = 'daftarmesin';
 ?>
+<input type="hidden" id="access" value="<?php echo $HakAkses; ?>">
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb"> <a href="<?php echo base_url(); ?>" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="current">Transaksi Penjualan</a> </div>
@@ -63,10 +64,17 @@
 	    				<input list="listCustomer" name="KodeCustomer" id="KodeCustomer" class="form-control" autocomplete="off">
 	    				<datalist id="listCustomer" >
 	    					<?php
-	                    		$rs = $this->db->query("select * from tcustomer where isActive = 1 order by KodeCustomer")->result();
+	    						$SQL = "select * from tcustomer where isActive = 1 ";
+	    						$rsx = $this->ModelsExecuteMaster->FindData(array('username'=>$username),'users');
+	    						if ($rsx->row()->HakAkses == 4) {
+	    							$SQL .= " AND KodeCustomer = '".$username."' ";
+	    						}
+	    						$SQL .= " order by KodeCustomer";
+	    						$rs = $this->db->query($SQL)->result();
 	                    		foreach ($rs as $key) {
 	                    			echo "<option value = '".$key->KodeCustomer." | ".$key->NamaCustomer."'>";
 	                    		}
+	                    		echo $akses;
 	                    	?>
 	    				</datalist>
 	    			</div>
@@ -485,7 +493,10 @@
 	                    allowEditing:false,
 	                    cellTemplate: function(cellElement, cellInfo) {
 	                    	var LinkAccess = "";
-	                    	LinkAccess = '<a href="#" id="'+cellInfo.data.NoTransaksi+'" class = "Change" onClick="ChangeStatus('+cellInfo.data.NoTransaksi+')"><span class="date badge badge-important">Update Status</span></a><br>';
+	                    	if ($('#access').val() != 4) {
+	                    		LinkAccess = '<a href="#" id="'+cellInfo.data.NoTransaksi+'" class = "Change" onClick="ChangeStatus('+cellInfo.data.NoTransaksi+')"><span class="date badge badge-important">Update Status</span></a><br>';
+	                    	}
+	                    	
 		                    cellElement.append(LinkAccess);
 		                }
 	                },
