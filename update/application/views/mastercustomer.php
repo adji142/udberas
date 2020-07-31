@@ -5,13 +5,13 @@
 ?>
 	<div id="content">
 		<div id="content-header">
-			<div id="breadcrumb"> <a href="<?php echo base_url(); ?>" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="current">Master Item</a> </div>
+			<div id="breadcrumb"> <a href="<?php echo base_url(); ?>" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="current">Master Customer</a> </div>
 		</div>
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="widget-box">
 					<div class="widget-title"> 
-			            <h5>Master Item</h5>
+			            <h5>Master Customer</h5>
 			        </div>
 			        <div class="widget-content">
 			        	<!-- <button type="button" class="btn btn-mini btn-info" data-toggle="modal" data-target="#modal_">
@@ -35,7 +35,7 @@
   	<div class="modal-content">
   		<div class="modal-header">
 	        <h5 class="modal-title" id="exampleModalLabel">
-	        	<div id="title_modal">Tambah Item
+	        	<div id="title_modal">Tambah Pelanggan
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			          <span aria-hidden="true">&times;</span>
 			        </button>
@@ -45,40 +45,32 @@
 	    <div class="modal-body">
 	    	<form class="form-horizontal" enctype='application/json' id="post_">
 	    		<div class="control-group">
-	    			<label class="control-label">Kode Item</label>
+	    			<label class="control-label">Kode Pelanggan</label>
 	    			<div class="controls">
-	    				<input type="text" name="ItemCode" id="ItemCode" required="" placeholder="Kode Item">
+	    				<input type="text" name="KodeCustomer" id="KodeCustomer" required="" placeholder="Kode Customer">
+	    				<input type="hidden" name="id" id="id">
+	    				<input type="hidden" name="Source" id="Source" value="1">
 	    				<input type="hidden" name="formtype" id="formtype" value="add">
 	    			</div>
 	    		</div>
 	    		<div class="control-group">
-	    			<label class="control-label">Nama Item</label>
+	    			<label class="control-label">Nama Customer</label>
 	    			<div class="controls">
-	    				<input type="text" name="ItemName" id="ItemName" required="" placeholder="Nama Item">
+	    				<input type="text" name="NamaCustomer" id="NamaCustomer" required="" placeholder="Nama Customer">
 	    			</div>
 	    		</div>
 	    		<div class="control-group">
-	    			<label class="control-label">Satuan</label>
+	    			<label class="control-label">AlamatCustomer</label>
 	    			<div class="controls">
-	    				<input type="text" name="Satuan" id="Satuan" required="" placeholder="Satuan">
+	    				<textarea id="AlamatCustomer" name="AlamatCustomer" rows="3"></textarea>
 	    			</div>
 	    		</div>
 	    		<div class="control-group">
-	    			<label class="control-label">Harga</label>
+	    			<label class="control-label">No. Telepon</label>
 	    			<div class="controls">
-	    				<input type="text" name="Harga" id="Harga" required="" placeholder="Harga">
+	    				<input type="text" name="NoTlp" id="NoTlp" required="" placeholder="No Tlp">
 	    			</div>
 	    		</div>
-	    		<div class="control-group">
-                    <label class="control-label">Foto</label>
-                    <div class="controls">
-                        <input type="file" id="bannerimage" name="bannerimage" />
-			              <img src="" id="profile-img-tag" width="200" />
-			              <span class="help-block">Max Resolution 800 x 600</span>
-			              <textarea id="Image" name="Image" style="display: none;"></textarea>
-			              <!-- display: none; -->
-                    </div>
-                </div>
 	            <!-- <div class="control-group">
 	    			<label class="control-label">Group Item</label>
 	    			<div class="controls">
@@ -100,7 +92,6 @@
 
 <script type="text/javascript">
 	$(function () {
-		var _URL = window.URL || window.webkitURL;
         $(document).ready(function () {
         	var where_field = '';
         	var where_value = '';
@@ -108,7 +99,7 @@
 
 	        $.ajax({
 	          type: "post",
-	          url: "<?=base_url()?>Mstr_Item/Read",
+	          url: "<?=base_url()?>Mstr_Cust/read",
 	          data: {'id':''},
 	          dataType: "json",
 	          success: function (response) {
@@ -125,7 +116,7 @@
 
 			$.ajax({
 		        type    :'post',
-		        url     : '<?=base_url()?>Mstr_Item/CRUD',
+		        url     : '<?=base_url()?>Mstr_Cust/CRUD',
 		        data    : me.serialize(),
 		        dataType: 'json',
 		        success : function (response) {
@@ -159,79 +150,46 @@
         $('.close').click(function() {
         	location.reload();
         });
-        $('#ItemCode').focusout(function () {
+        $('#KodeCustomer').focusout(function () {
 			$.ajax({
 	          type: "post",
-	          url: "<?=base_url()?>Mstr_Item/read",
-	          data: {'ItemCode':$('#ItemCode').val()},
+	          url: "<?=base_url()?>Mstr_Cust/read",
+	          data: {'id':$('#KodeCustomer').val()},
 	          dataType: "json",
 	          success: function (response) {
           		$.each(response.data,function (k,v) {
           			console.log(v.KelompokUsaha);
-		            $('#ItemCode').val(v.ItemCode);
-					$('#ItemName').val(v.ItemName);
-					$('#Satuan').val(v.Satuan);
-					$('#Image').val(v.Image);
-					$('#Harga').val(v.Harga);
+		            $('#KodeCustomer').val(v.KodeCustomer);
+					$('#NamaCustomer').val(v.NamaCustomer);
+					$('#AlamatCustomer').val(v.AlamatCustomer);
+					$('#NoTlp').val(v.NoTlp);
+					$('#Source').val(v.Source);
+
 					$('#formtype').val("edit");
+					$('#id').val(v.id);
 		          });
 	          }
 	        });
-        });
-        $("#bannerimage").change(function(){
-	      var file = $(this)[0].files[0];
-	      img = new Image();
-	      img.src = _URL.createObjectURL(file);
-	      var imgwidth = 0;
-	      var imgheight = 0;
-	      img.onload = function () {
-	        imgwidth = this.width;
-	        imgheight = this.height;
-	        $('#width').val(imgwidth);
-	        $('#height').val(imgheight);
-	      }
-	      readURL(this);
-	      encodeImagetoBase64(this);
-	      // alert("Current width=" + imgwidth + ", " + "Original height=" + imgheight);
-	    });
-	    function readURL(input) {
-		    if (input.files && input.files[0]) {
-		      var reader = new FileReader();
-		        
-		      reader.onload = function (e) {
-		          $('#profile-img-tag').attr('src', e.target.result);
-		      }
-		      reader.readAsDataURL(input.files[0]);
-		    }
-		}
-		function encodeImagetoBase64(element) {
-		    $('#Image').val('');
-		    var file = element.files[0];
-		    var reader = new FileReader();
-		    reader.onloadend = function() {
-		        // $(".link").attr("href",reader.result);
-		        // $(".link").text(reader.result);
-		    	$('#Image').val(reader.result);
-		    }
-		    reader.readAsDataURL(file);
-		}
+        })
 		function GetData(id) {
 			var where_field = 'id';
         	var where_value = id;
         	var table = 'users';
 			$.ajax({
 	          type: "post",
-	          url: "<?=base_url()?>Mstr_Item/read",
+	          url: "<?=base_url()?>Mstr_Cust/read",
 	          data: {'ItemCode':id},
 	          dataType: "json",
 	          success: function (response) {
           		$.each(response.data,function (k,v) {
           			console.log(v.KelompokUsaha);
-		            $('#ItemCode').val(v.ItemCode);
-					$('#ItemName').val(v.ItemName);
-					$('#Satuan').val(v.Satuan);
-					$('#Image').val(v.Image);
-					$('#Harga').val(v.Harga);
+		            $('#KodeCustomer').val(v.KodeCustomer);
+					$('#NamaCustomer').val(v.NamaCustomer);
+					$('#AlamatCustomer').val(v.AlamatCustomer);
+					$('#NoTlp').val(v.NoTlp);
+					$('#Source').val(v.Source);
+
+					$('#id').val(v.id);
 					$('#formtype').val("edit");
 
 					$('#modal_').modal('show');
@@ -244,7 +202,7 @@
 			$("#gridContainer").dxDataGrid({
 				allowColumnResizing: true,
 		        dataSource: data,
-		        keyExpr: "ItemCode",
+		        keyExpr: "id",
 		        showBorders: true,
 		        allowColumnReordering: true,
 		        allowColumnResizing: true,
@@ -273,23 +231,28 @@
 		        },
 		        columns: [
 		            {
-		                dataField: "ItemCode",
-		                caption: "Kode Item",
+		                dataField: "KodeCustomer",
+		                caption: "Kode Customer",
 		                allowEditing:false
 		            },
 		            {
-		                dataField: "ItemName",
-		                caption: "Nama Item",
+		                dataField: "NamaCustomer",
+		                caption: "Nama Customer",
 		                allowEditing:false
 		            },
 		            {
-		                dataField: "Harga",
-		                caption: "Harga",
+		                dataField: "AlamatCustomer",
+		                caption: "Alamat",
+		                allowEditing:false
+		            },
+		            {
+		                dataField: "NoTlp",
+		                caption: "NoTlp",
 		                allowEditing:false
 		            },
 		        ],
 		        onEditingStart: function(e) {
-		            GetData(e.data.ItemCode);
+		            GetData(e.data.KodeCustomer);
 		        },
 		        onInitNewRow: function(e) {
 		            // logEvent("InitNewRow");
@@ -312,7 +275,7 @@
 		            // logEvent(e);
 		        },
 		        onRowRemoving: function(e) {
-		        	id = e.data.ItemCode;
+		        	id = e.data.id;
 		        	Swal.fire({
 					  title: 'Apakah anda yakin?',
 					  text: "anda akan menghapus data di baris ini !",
@@ -329,8 +292,8 @@
 
 					  	$.ajax({
 					        type    :'post',
-					        url     : '<?=base_url()?>Mstr_Item/CRUD',
-					        data    : {'ItemCode':id,'formtype':'delete'},
+					        url     : '<?=base_url()?>Mstr_Cust/CRUD',
+					        data    : {'id':id,'formtype':'delete'},
 					        dataType: 'json',
 					        success : function (response) {
 					          if(response.success == true){

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Mstr_Item extends CI_Controller {
+class Mstr_Vendor extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -30,20 +30,14 @@ class Mstr_Item extends CI_Controller {
 	{
 		$data = array('success' => false ,'message'=>array(),'data' => array());
 
-		$id = $this->input->post('ItemCode');
-		$kriteria = $this->input->post('kriteria');
+		$id = $this->input->post('id');
 
-		$SQL = "SELECT * FROM titem WHERE isActive = 1 ";
-
-		if ($id != '') {
-			// $rs = $this->ModelsExecuteMaster->FindData(array('isActive'=>1),'titem');
-			$SQL .= " AND ItemCode = '".$id."'";
+		if ($id == '') {
+			$rs = $this->ModelsExecuteMaster->FindData(array('isActive'=>1),'tvendor');
 		}
-		if ($kriteria != '') {
-			$SQL .= " AND ItemName LIKE '%".$kriteria."%'";
+		else{
+			$rs = $this->ModelsExecuteMaster->FindData(array('isActive'=>1,'KodeVendor'=>$id),'tvendor');
 		}
-
-		$rs = $this->db->query($SQL);
 
 		if ($rs->num_rows()>0) {
 			$data['success'] = true;
@@ -58,33 +52,24 @@ class Mstr_Item extends CI_Controller {
 	{
 		$data = array('success' => false ,'message'=>array());
 
-		$ItemCode = $this->input->post('ItemCode');
-		$ItemName = $this->input->post('ItemName');
-		// $ItemGroup = $this->input->post('ItemGroup');
-		$Satuan	= $this->input->post('Satuan');
-		$Image = $this->input->post('Image');
-		$Createdby = $this->session->userdata('NamaUser');
-		$Createdon = date("Y-m-d h:i:sa");
-		$Harga = $this->input->post('Harga');
-		// $exploder = explode("|",$ItemGroup[0]);
+		$KodeVendor		= $this->input->post('KodeVendor');
+		$NamaVendor		= $this->input->post('NamaVendor');
+		$AlamatVendor	= $this->input->post('AlamatVendor');
+		$TlpVendor		= $this->input->post('TlpVendor');
 
 		$id = $this->input->post('id');
 		$formtype = $this->input->post('formtype');
 
 		$param = array(
-			'ItemCode'	=> $ItemCode,
-			'ItemName'	=> $ItemName,
-			// 'ItemGroup'	=> $ItemGroup,
-			'Createdby'	=> $Createdby,
-			'Createdon'	=> $Createdon,
-			'Satuan'	=> $Satuan,
-			'Image'		=> $Image,
-			'Harga'		=> $Harga
+			'KodeVendor'	=> $KodeVendor,
+			'NamaVendor'	=> $NamaVendor,
+			'AlamatVendor'	=> $AlamatVendor,
+			'TlpVendor'		=> $TlpVendor
 		);
 		if ($formtype == 'add') {
 			$this->db->trans_begin();
 			try {
-				$rs = $this->ModelsExecuteMaster->ExecInsert($param,'titem');
+				$rs = $this->ModelsExecuteMaster->ExecInsert($param,'tvendor');
 				if ($rs) {
 					$this->db->trans_commit();
 					$data['success'] = true;
@@ -102,7 +87,7 @@ class Mstr_Item extends CI_Controller {
 		}
 		elseif ($formtype == 'edit') {
 			try {
-				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('ItemCode'=> $ItemCode),'titem');
+				$rs = $this->ModelsExecuteMaster->ExecUpdate($param,array('KodeVendor'=> $KodeVendor),'tvendor');
 				if ($rs) {
 					$data['success'] = true;
 				}
@@ -113,7 +98,7 @@ class Mstr_Item extends CI_Controller {
 		}
 		elseif ($formtype == 'delete') {
 			try {
-				$rs = $this->ModelsExecuteMaster->ExecUpdate(array('isActive'=>0),array('ItemCode'=> $ItemCode),'titem');
+				$rs = $this->ModelsExecuteMaster->ExecUpdate(array('isActive'=>0),array('KodeVendor'=> $KodeVendor),'tvendor');
 				if ($rs) {
 					$data['success'] = true;
 				}

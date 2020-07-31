@@ -5,13 +5,13 @@
 ?>
 	<div id="content">
 		<div id="content-header">
-			<div id="breadcrumb"> <a href="<?php echo base_url(); ?>" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="current">Master Item</a> </div>
+			<div id="breadcrumb"> <a href="<?php echo base_url(); ?>" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="current">Users</a> </div>
 		</div>
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="widget-box">
 					<div class="widget-title"> 
-			            <h5>Master Item</h5>
+			            <h5>Users</h5>
 			        </div>
 			        <div class="widget-content">
 			        	<!-- <button type="button" class="btn btn-mini btn-info" data-toggle="modal" data-target="#modal_">
@@ -35,7 +35,7 @@
   	<div class="modal-content">
   		<div class="modal-header">
 	        <h5 class="modal-title" id="exampleModalLabel">
-	        	<div id="title_modal">Tambah Item
+	        	<div id="title_modal">Tambah User
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			          <span aria-hidden="true">&times;</span>
 			        </button>
@@ -45,49 +45,29 @@
 	    <div class="modal-body">
 	    	<form class="form-horizontal" enctype='application/json' id="post_">
 	    		<div class="control-group">
-	    			<label class="control-label">Kode Item</label>
+	    			<label class="control-label">Username</label>
 	    			<div class="controls">
-	    				<input type="text" name="ItemCode" id="ItemCode" required="" placeholder="Kode Item">
+	    				<input type="text" name="Username" id="Username" required="" placeholder="Username">
+	    				<input type="hidden" name="id" id="id">
 	    				<input type="hidden" name="formtype" id="formtype" value="add">
 	    			</div>
 	    		</div>
 	    		<div class="control-group">
-	    			<label class="control-label">Nama Item</label>
+	    			<label class="control-label">Password</label>
 	    			<div class="controls">
-	    				<input type="text" name="ItemName" id="ItemName" required="" placeholder="Nama Item">
+	    				<input type="Password" name="Password" id="Password" required="" placeholder="Password">
 	    			</div>
 	    		</div>
-	    		<div class="control-group">
-	    			<label class="control-label">Satuan</label>
-	    			<div class="controls">
-	    				<input type="text" name="Satuan" id="Satuan" required="" placeholder="Satuan">
-	    			</div>
-	    		</div>
-	    		<div class="control-group">
-	    			<label class="control-label">Harga</label>
-	    			<div class="controls">
-	    				<input type="text" name="Harga" id="Harga" required="" placeholder="Harga">
-	    			</div>
-	    		</div>
-	    		<div class="control-group">
-                    <label class="control-label">Foto</label>
-                    <div class="controls">
-                        <input type="file" id="bannerimage" name="bannerimage" />
-			              <img src="" id="profile-img-tag" width="200" />
-			              <span class="help-block">Max Resolution 800 x 600</span>
-			              <textarea id="Image" name="Image" style="display: none;"></textarea>
-			              <!-- display: none; -->
-                    </div>
-                </div>
-	            <!-- <div class="control-group">
-	    			<label class="control-label">Group Item</label>
+	    		<!-- <div class="control-group">
+	    			<label class="control-label">Tipe</label>
 	    			<div class="controls">
 	    				<select name="tipe" id="tipe">
-	    					<option value="1">Penjualan</option>
-	    					<option value="2">Bahan Baku</option>
+	    					<option value="1">Admin</option>
+	    					<option value="2">Users</option>
 	    				</select>
 	    			</div>
 	    		</div> -->
+	            
 	            <button class="btn btn-primary" id="btn_Save">Save</button>
 	    	</form>
 	    </div>
@@ -100,7 +80,6 @@
 
 <script type="text/javascript">
 	$(function () {
-		var _URL = window.URL || window.webkitURL;
         $(document).ready(function () {
         	var where_field = '';
         	var where_value = '';
@@ -108,8 +87,8 @@
 
 	        $.ajax({
 	          type: "post",
-	          url: "<?=base_url()?>Mstr_Item/Read",
-	          data: {'id':''},
+	          url: "<?=base_url()?>Apps/FindData",
+	          data: {where_field:where_field,where_value:where_value,table:table},
 	          dataType: "json",
 	          success: function (response) {
 	          	bindGrid(response.data);
@@ -125,7 +104,7 @@
 
 			$.ajax({
 		        type    :'post',
-		        url     : '<?=base_url()?>Mstr_Item/CRUD',
+		        url     : '<?=base_url()?>Apps/addUsers',
 		        data    : me.serialize(),
 		        dataType: 'json',
 		        success : function (response) {
@@ -159,79 +138,21 @@
         $('.close').click(function() {
         	location.reload();
         });
-        $('#ItemCode').focusout(function () {
-			$.ajax({
-	          type: "post",
-	          url: "<?=base_url()?>Mstr_Item/read",
-	          data: {'ItemCode':$('#ItemCode').val()},
-	          dataType: "json",
-	          success: function (response) {
-          		$.each(response.data,function (k,v) {
-          			console.log(v.KelompokUsaha);
-		            $('#ItemCode').val(v.ItemCode);
-					$('#ItemName').val(v.ItemName);
-					$('#Satuan').val(v.Satuan);
-					$('#Image').val(v.Image);
-					$('#Harga').val(v.Harga);
-					$('#formtype').val("edit");
-		          });
-	          }
-	        });
-        });
-        $("#bannerimage").change(function(){
-	      var file = $(this)[0].files[0];
-	      img = new Image();
-	      img.src = _URL.createObjectURL(file);
-	      var imgwidth = 0;
-	      var imgheight = 0;
-	      img.onload = function () {
-	        imgwidth = this.width;
-	        imgheight = this.height;
-	        $('#width').val(imgwidth);
-	        $('#height').val(imgheight);
-	      }
-	      readURL(this);
-	      encodeImagetoBase64(this);
-	      // alert("Current width=" + imgwidth + ", " + "Original height=" + imgheight);
-	    });
-	    function readURL(input) {
-		    if (input.files && input.files[0]) {
-		      var reader = new FileReader();
-		        
-		      reader.onload = function (e) {
-		          $('#profile-img-tag').attr('src', e.target.result);
-		      }
-		      reader.readAsDataURL(input.files[0]);
-		    }
-		}
-		function encodeImagetoBase64(element) {
-		    $('#Image').val('');
-		    var file = element.files[0];
-		    var reader = new FileReader();
-		    reader.onloadend = function() {
-		        // $(".link").attr("href",reader.result);
-		        // $(".link").text(reader.result);
-		    	$('#Image').val(reader.result);
-		    }
-		    reader.readAsDataURL(file);
-		}
 		function GetData(id) {
 			var where_field = 'id';
         	var where_value = id;
         	var table = 'users';
 			$.ajax({
 	          type: "post",
-	          url: "<?=base_url()?>Mstr_Item/read",
-	          data: {'ItemCode':id},
+	          url: "<?=base_url()?>Apps/FindData",
+	          data: {where_field:where_field,where_value:where_value,table:table},
 	          dataType: "json",
 	          success: function (response) {
           		$.each(response.data,function (k,v) {
           			console.log(v.KelompokUsaha);
-		            $('#ItemCode').val(v.ItemCode);
-					$('#ItemName').val(v.ItemName);
-					$('#Satuan').val(v.Satuan);
-					$('#Image').val(v.Image);
-					$('#Harga').val(v.Harga);
+		            $('#Username').val(v.username);
+					$('#Password').val('');
+					$('#id').val(v.id).change();
 					$('#formtype').val("edit");
 
 					$('#modal_').modal('show');
@@ -244,7 +165,7 @@
 			$("#gridContainer").dxDataGrid({
 				allowColumnResizing: true,
 		        dataSource: data,
-		        keyExpr: "ItemCode",
+		        keyExpr: "id",
 		        showBorders: true,
 		        allowColumnReordering: true,
 		        allowColumnResizing: true,
@@ -257,7 +178,7 @@
 		            mode: "row",
 		            allowAdding:true,
 		            allowUpdating: true,
-		            allowDeleting: true,
+		            // allowDeleting: true,
 		            texts: {
 		                confirmDeleteMessage: ''  
 		            }
@@ -273,23 +194,18 @@
 		        },
 		        columns: [
 		            {
-		                dataField: "ItemCode",
-		                caption: "Kode Item",
+		                dataField: "id",
+		                caption: "id",
 		                allowEditing:false
 		            },
 		            {
-		                dataField: "ItemName",
-		                caption: "Nama Item",
-		                allowEditing:false
-		            },
-		            {
-		                dataField: "Harga",
-		                caption: "Harga",
+		                dataField: "username",
+		                caption: "User Name",
 		                allowEditing:false
 		            },
 		        ],
 		        onEditingStart: function(e) {
-		            GetData(e.data.ItemCode);
+		            GetData(e.data.id);
 		        },
 		        onInitNewRow: function(e) {
 		            // logEvent("InitNewRow");
@@ -312,7 +228,7 @@
 		            // logEvent(e);
 		        },
 		        onRowRemoving: function(e) {
-		        	id = e.data.ItemCode;
+		        	id = e.data.id;
 		        	Swal.fire({
 					  title: 'Apakah anda yakin?',
 					  text: "anda akan menghapus data di baris ini !",
@@ -329,8 +245,8 @@
 
 					  	$.ajax({
 					        type    :'post',
-					        url     : '<?=base_url()?>Mstr_Item/CRUD',
-					        data    : {'ItemCode':id,'formtype':'delete'},
+					        url     : '<?=base_url()?>Apps/remove',
+					        data    : {table:table,field:field,value:value},
 					        dataType: 'json',
 					        success : function (response) {
 					          if(response.success == true){

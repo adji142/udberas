@@ -5,18 +5,26 @@
 ?>
 	<div id="content">
 		<div id="content-header">
-			<div id="breadcrumb"> <a href="<?php echo base_url(); ?>" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="current">Master Item</a> </div>
+			<div id="breadcrumb"> <a href="<?php echo base_url(); ?>" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="current">Transaksi</a> </div>
 		</div>
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="widget-box">
 					<div class="widget-title"> 
-			            <h5>Master Item</h5>
+			            <h5>Transaksi</h5>
 			        </div>
 			        <div class="widget-content">
 			        	<!-- <button type="button" class="btn btn-mini btn-info" data-toggle="modal" data-target="#modal_">
 							  Tambah Pelayan
 						</button> -->
+						<div class="controls controls-row">
+							<select class="span3 m-wrap" name="filtertipe" id="filtertipe">
+								<option value="KARTUN">KARTUN</option>
+								<option value="ABSTRAK">ABSTRAK</option>
+								<option value="TROPIKAL">TROPIKAL</option>
+							</select>
+							<button class="span3 m-wrap" name="searchbytipe" id="searchbytipe">Cari</button>
+				        </div>
 						<div class="dx-viewport demo-container">
 				        	<div id="data-grid-demo">
 				        		<div id="gridContainer">
@@ -35,7 +43,7 @@
   	<div class="modal-content">
   		<div class="modal-header">
 	        <h5 class="modal-title" id="exampleModalLabel">
-	        	<div id="title_modal">Tambah Item
+	        	<div id="title_modal">Transaksi
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			          <span aria-hidden="true">&times;</span>
 			        </button>
@@ -45,49 +53,41 @@
 	    <div class="modal-body">
 	    	<form class="form-horizontal" enctype='application/json' id="post_">
 	    		<div class="control-group">
-	    			<label class="control-label">Kode Item</label>
+	    			<label class="control-label">Tanggal Transaksi</label>
 	    			<div class="controls">
-	    				<input type="text" name="ItemCode" id="ItemCode" required="" placeholder="Kode Item">
-	    				<input type="hidden" name="formtype" id="formtype" value="add">
+	    				<input type="date" name="tgltransaksi" id="tgltransaksi" required="">
+	    				<input type="hidden" class="span3 m-wrap" id="id" name="id">
+			          <input type="hidden" class="span3 m-wrap" id="formtype" name="formtype" value="add">
 	    			</div>
 	    		</div>
 	    		<div class="control-group">
-	    			<label class="control-label">Nama Item</label>
+	    			<label class="control-label">NoRef</label>
 	    			<div class="controls">
-	    				<input type="text" name="ItemName" id="ItemName" required="" placeholder="Nama Item">
+	    				<input type="text" name="NoRef" id="NoRef" required="">
 	    			</div>
 	    		</div>
 	    		<div class="control-group">
-	    			<label class="control-label">Satuan</label>
+	    			<label class="control-label">Merk</label>
 	    			<div class="controls">
-	    				<input type="text" name="Satuan" id="Satuan" required="" placeholder="Satuan">
+	    				<input type="text" name="Merk" id="Merk" required="" readonly="" value="DOWNSTORE">
 	    			</div>
 	    		</div>
 	    		<div class="control-group">
-	    			<label class="control-label">Harga</label>
+	    			<label class="control-label">Tipe</label>
 	    			<div class="controls">
-	    				<input type="text" name="Harga" id="Harga" required="" placeholder="Harga">
-	    			</div>
-	    		</div>
-	    		<div class="control-group">
-                    <label class="control-label">Foto</label>
-                    <div class="controls">
-                        <input type="file" id="bannerimage" name="bannerimage" />
-			              <img src="" id="profile-img-tag" width="200" />
-			              <span class="help-block">Max Resolution 800 x 600</span>
-			              <textarea id="Image" name="Image" style="display: none;"></textarea>
-			              <!-- display: none; -->
-                    </div>
-                </div>
-	            <!-- <div class="control-group">
-	    			<label class="control-label">Group Item</label>
-	    			<div class="controls">
-	    				<select name="tipe" id="tipe">
-	    					<option value="1">Penjualan</option>
-	    					<option value="2">Bahan Baku</option>
+	    				<select id="tipe" name="tipe">
+	    					<option value="KARTUN">KARTUN</option>
+	    					<option value="ABSTRAK">ABSTRAK</option>
+	    					<option value="TROPIKAL">TROPIKAL</option>
 	    				</select>
 	    			</div>
-	    		</div> -->
+	    		</div>
+	            <div class="control-group">
+	    			<label class="control-label">Jumlah</label>
+	    			<div class="controls">
+	    				<input type="number" name="jml" id="jml" required="">
+	    			</div>
+	    		</div>
 	            <button class="btn btn-primary" id="btn_Save">Save</button>
 	    	</form>
 	    </div>
@@ -100,16 +100,15 @@
 
 <script type="text/javascript">
 	$(function () {
-		var _URL = window.URL || window.webkitURL;
         $(document).ready(function () {
-        	var where_field = '';
-        	var where_value = '';
-        	var table = 'users';
+        	var where_field = 'Tipe';
+        	var where_value = $('#filtertipe').val();
+        	var table = 'ttransaksi';
 
 	        $.ajax({
 	          type: "post",
-	          url: "<?=base_url()?>Mstr_Item/Read",
-	          data: {'id':''},
+	          url: "<?=base_url()?>Apps/FindData",
+	          data: {where_field:where_field,where_value:where_value,table:table},
 	          dataType: "json",
 	          success: function (response) {
 	          	bindGrid(response.data);
@@ -125,7 +124,7 @@
 
 			$.ajax({
 		        type    :'post',
-		        url     : '<?=base_url()?>Mstr_Item/CRUD',
+		        url     : '<?=base_url()?>Apps/appendTransaksi',
 		        data    : me.serialize(),
 		        dataType: 'json',
 		        success : function (response) {
@@ -156,82 +155,66 @@
 		        }
 		      });
         });
+        $('#searchbytipe').click(function () {
+        	var where_field = 'Tipe';
+        	var where_value = $('#filtertipe').val();
+        	var table = 'ttransaksi';
+
+	        $.ajax({
+	          type: "post",
+	          url: "<?=base_url()?>Apps/FindData",
+	          data: {where_field:where_field,where_value:where_value,table:table},
+	          dataType: "json",
+	          success: function (response) {
+	          	bindGrid(response.data);
+	          }
+	        });        });
         $('.close').click(function() {
         	location.reload();
         });
-        $('#ItemCode').focusout(function () {
-			$.ajax({
-	          type: "post",
-	          url: "<?=base_url()?>Mstr_Item/read",
-	          data: {'ItemCode':$('#ItemCode').val()},
-	          dataType: "json",
-	          success: function (response) {
-          		$.each(response.data,function (k,v) {
-          			console.log(v.KelompokUsaha);
-		            $('#ItemCode').val(v.ItemCode);
-					$('#ItemName').val(v.ItemName);
-					$('#Satuan').val(v.Satuan);
-					$('#Image').val(v.Image);
-					$('#Harga').val(v.Harga);
-					$('#formtype').val("edit");
-		          });
-	          }
-	        });
-        });
-        $("#bannerimage").change(function(){
-	      var file = $(this)[0].files[0];
-	      img = new Image();
-	      img.src = _URL.createObjectURL(file);
-	      var imgwidth = 0;
-	      var imgheight = 0;
-	      img.onload = function () {
-	        imgwidth = this.width;
-	        imgheight = this.height;
-	        $('#width').val(imgwidth);
-	        $('#height').val(imgheight);
-	      }
-	      readURL(this);
-	      encodeImagetoBase64(this);
-	      // alert("Current width=" + imgwidth + ", " + "Original height=" + imgheight);
-	    });
-	    function readURL(input) {
-		    if (input.files && input.files[0]) {
-		      var reader = new FileReader();
-		        
-		      reader.onload = function (e) {
-		          $('#profile-img-tag').attr('src', e.target.result);
-		      }
-		      reader.readAsDataURL(input.files[0]);
-		    }
-		}
-		function encodeImagetoBase64(element) {
-		    $('#Image').val('');
-		    var file = element.files[0];
-		    var reader = new FileReader();
-		    reader.onloadend = function() {
-		        // $(".link").attr("href",reader.result);
-		        // $(".link").text(reader.result);
-		    	$('#Image').val(reader.result);
-		    }
-		    reader.readAsDataURL(file);
+        $('#pelanggan_list').on('click','tr',function () {
+			var return_IDData = 1;
+			var lookup_id = $(this).find("#lookup_id").text();
+			var lookup_fullname = $(this).find("#lookup_fullname").text();
+			
+			$('#nama').val(lookup_fullname);
+			$('#kdpelanggan').val(lookup_id);
+
+			$('#Modalpelanggan').modal('toggle');
+		});
+		$('#Lookupsearch').click(function () {
+			SearchData(false);
+		});
+		$('#rst_btn').click(function () {
+			$('#xsrc').val('');
+			SearchData();
+		});
+        // function
+        function ClearForm() {
+			$('#kd_pos').attr('disabled',true);
+			$('#nm_pos').attr('disabled',true);
+			$('#kel').attr('disabled',true);
 		}
 		function GetData(id) {
+			// console.log(id);
 			var where_field = 'id';
         	var where_value = id;
-        	var table = 'users';
+        	var table = 'ttransaksi';
 			$.ajax({
 	          type: "post",
-	          url: "<?=base_url()?>Mstr_Item/read",
-	          data: {'ItemCode':id},
+	          url: "<?=base_url()?>Apps/FindData",
+	          data: {where_field:where_field,where_value:where_value,table:table},
 	          dataType: "json",
 	          success: function (response) {
           		$.each(response.data,function (k,v) {
           			console.log(v.KelompokUsaha);
-		            $('#ItemCode').val(v.ItemCode);
-					$('#ItemName').val(v.ItemName);
-					$('#Satuan').val(v.Satuan);
-					$('#Image').val(v.Image);
-					$('#Harga').val(v.Harga);
+		            $('#tgltransaksi').val(v.Tanggal);
+		            $('#NoRef').val(v.NoRef);
+		            $('#Merk').val(v.Merk);
+					$('#tipe').val(v.Tipe).change();
+					$('#jml').val(v.Qty);
+
+					$('#id').val(v.id);
 					$('#formtype').val("edit");
 
 					$('#modal_').modal('show');
@@ -244,20 +227,20 @@
 			$("#gridContainer").dxDataGrid({
 				allowColumnResizing: true,
 		        dataSource: data,
-		        keyExpr: "ItemCode",
+		        keyExpr: "id",
 		        showBorders: true,
 		        allowColumnReordering: true,
 		        allowColumnResizing: true,
 		        columnAutoWidth: true,
 		        showBorders: true,
 		        paging: {
-		            enabled: false
+		            enabled: true
 		        },
 		        editing: {
 		            mode: "row",
-		            allowAdding:true,
-		            allowUpdating: true,
-		            allowDeleting: true,
+		            // allowAdding:true,
+		            // allowUpdating: true,
+		            // allowDeleting: true,
 		            texts: {
 		                confirmDeleteMessage: ''  
 		            }
@@ -273,23 +256,39 @@
 		        },
 		        columns: [
 		            {
-		                dataField: "ItemCode",
-		                caption: "Kode Item",
+		                dataField: "id",
+		                caption: "id",
+		                allowEditing:false,
+		                visible : false
+		            },
+		            {
+		                dataField: "Tanggal",
+		                caption: "Tanggal Transaksi",
 		                allowEditing:false
 		            },
 		            {
-		                dataField: "ItemName",
-		                caption: "Nama Item",
+		                dataField: "NoRef",
+		                caption: "No. Ref",
 		                allowEditing:false
 		            },
 		            {
-		                dataField: "Harga",
-		                caption: "Harga",
+		                dataField: "Merk",
+		                caption: "Merk",
 		                allowEditing:false
 		            },
+		            {
+		                dataField: "Tipe",
+		                caption: "Tipe",
+		                allowEditing:false
+		            },
+		            {
+		                dataField: "Qty",
+		                caption: "Jumlah",
+		                allowEditing:false
+		            }
 		        ],
 		        onEditingStart: function(e) {
-		            GetData(e.data.ItemCode);
+		            GetData(e.data.id);
 		        },
 		        onInitNewRow: function(e) {
 		            // logEvent("InitNewRow");
@@ -312,7 +311,7 @@
 		            // logEvent(e);
 		        },
 		        onRowRemoving: function(e) {
-		        	id = e.data.ItemCode;
+		        	id = e.data.id;
 		        	Swal.fire({
 					  title: 'Apakah anda yakin?',
 					  text: "anda akan menghapus data di baris ini !",
@@ -323,14 +322,14 @@
 					  confirmButtonText: 'Yes, delete it!'
 					}).then((result) => {
 					  if (result.value) {
-					  	var table = 'app_setting';
+					  	var table = 'ttransaksi';
 					  	var field = 'id';
 					  	var value = id;
 
 					  	$.ajax({
 					        type    :'post',
-					        url     : '<?=base_url()?>Mstr_Item/CRUD',
-					        data    : {'ItemCode':id,'formtype':'delete'},
+					        url     : '<?=base_url()?>Apps/remove',
+					        data    : {table:table,field:field,value:value},
 					        dataType: 'json',
 					        success : function (response) {
 					          if(response.success == true){
@@ -373,4 +372,37 @@
 		    // $('.dx-toolbar-after').append('Tambah Alat untuk di pinjam ');
 		}
 	});
+	function SearchData() {
+		var param = $('#nama').val();
+		$('#Modalpelanggan').modal('toggle');
+		$.ajax({
+          type: "post",
+          url: "<?=base_url()?>Lookup/LookupPelanggan",
+          data: {param:param},
+          dataType: "json",
+          success: function (response) {
+          	if (response.success == true) {
+          		if (response.count == 1) {
+          			$.each(response.data,function (k,v) {
+			            $('#nama').val(v.NmCustomer);
+						$('#kdpelanggan').val(v.id);
+			          });
+          		}
+          		else{
+          			var html = '';
+			        var i;
+			        for (i = 0; i < response.data.length; i++) {
+			          html += '<tr>' +
+			                  '<td id = "lookup_id">' + response.data[i].id+'</td>' +
+			                  '<td id = "lookup_fullname">' + response.data[i].NmCustomer +'</td></tr>';
+			        }
+			        $('#load_data').html(html);
+			        $('#Modalpelanggan').modal('show');
+			        $('#Modalpelanggan').modal('toggle');
+			        $('#Modalpelanggan').modal('show');
+          		}
+          	}
+          }
+        });
+	}
 </script>

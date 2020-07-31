@@ -5,13 +5,13 @@
 ?>
 	<div id="content">
 		<div id="content-header">
-			<div id="breadcrumb"> <a href="<?php echo base_url(); ?>" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="current">Transaksi Pembelian</a> </div>
+			<div id="breadcrumb"> <a href="<?php echo base_url(); ?>" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="current">Transaksi Produksi</a> </div>
 		</div>
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="widget-box">
 					<div class="widget-title"> 
-			            <h5>Pembelian</h5>
+			            <h5>Produksi</h5>
 			        </div>
 			        <div class="widget-content">
 			        	<!-- <button type="button" class="btn btn-mini btn-info" data-toggle="modal" data-target="#modal_">
@@ -35,7 +35,7 @@
   	<div class="modal-content">
   		<div class="modal-header">
 	        <h5 class="modal-title" id="exampleModalLabel">
-	        	<div id="title_modal">Tambah Pembelian
+	        	<div id="title_modal">Tambah Produksi
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			          <span aria-hidden="true">&times;</span>
 			        </button>
@@ -58,20 +58,25 @@
 	    			</div>
 	    		</div>
 	    		<div class="control-group">
-	    			<label class="control-label">Vendor</label>
+	    			<label class="control-label">Item Hasil Produksi</label>
 	    			<div class="controls">
-	    				<input list="listCustomer" name="KodeVendor" id="KodeVendor" class="form-control" autocomplete="off">
-	    				<datalist id="listCustomer" >
+	    				<input list="listItem" name="KodeItemFG" id="KodeItemFG" class="form-control" autocomplete="off">
+	    				<datalist id="listItem" >
 	    					<?php
-	                    		$rs = $this->db->query("select * from tvendor where isActive = 1 order by KodeVendor")->result();
+	                    		$rs = $this->db->query("select * from titem where isActive = 1 order by ItemCode")->result();
 	                    		foreach ($rs as $key) {
-	                    			echo "<option value = '".$key->KodeVendor." | ".$key->NamaVendor."'>";
+	                    			echo "<option value = '".$key->ItemCode." | ".$key->ItemName."'>";
 	                    		}
 	                    	?>
 	    				</datalist>
 	    			</div>
 	    		</div>
-
+	    		<div class="control-group">
+	    			<label class="control-label">Qty Hasil</label>
+	    			<div class="controls">
+	    				<input type="number" name="QtyFG" id="QtyFG" required="" autocomplete="off">
+	    			</div>
+	    		</div>
 	            <!-- <div class="control-group">
 	    			<label class="control-label">Group Item</label>
 	    			<div class="controls">
@@ -82,6 +87,9 @@
 	    			</div>
 	    		</div> -->
 	    	</form>
+	    	<br>
+	    	<h3><center>Pemakaian Bahan</center></h3>
+	    	<h4><div id="error_alert"></div></h4>
 	    	<div id="gridContainer_Detail">
         	
         	</div>
@@ -89,75 +97,6 @@
         	<button class="btn btn-primary" id="btn_Save">Save</button>
 	    </div>
   	</div>
-  </div>
-</div>
-
-<div class="modal hide" id="ModalItem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog-scrollable" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"><div id="title_modal"></div></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <!-- Input from hire -->
-        <table class="table table-bordered data-table" id="alat_list">
-        	<thead>
-              <tr>
-              	<th>Row ID</th>
-              	<th>Kode Item</th>
-                <th>Nama Item</th>
-              </tr>
-            </thead>
-            <tbody id="load_data_alat">
-              
-            </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <!-- <button type="button" class="btn btn-primary" id="Save_Btn">Save changes</button> -->
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="modal hide" id="ModalStatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog-scrollable" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ganti Status Transaksi
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        </h5>
-      </div>
-      <div class="modal-body">
-        <!-- Input from hire -->
-        <input type="hidden" name="NoTransaksi" id="NoTransaksi">
-        <div class="control-group">
-			<label class="control-label">Status Transaksi</label>
-			<div class="controls">
-				<select id="listStatus" >
-					<option value="1">Ordered</option>
-					<option value="2">Di Proses</option>
-					<option value="3">Di Kirim</option>
-					<option value="4">Selesai</option>
-					<option value="5">Cancel</option>
-				</select>
-			</div>
-		</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="Save_Btn_Status">Save changes</button>
-      </div>
-    </div>
   </div>
 </div>
 <?php
@@ -174,7 +113,7 @@
 
 	        $.ajax({
 	          type: "post",
-	          url: "<?=base_url()?>Trx_pembelian/read",
+	          url: "<?=base_url()?>Trx_produksi/read",
 	          data: {'id':''},
 	          dataType: "json",
 	          success: function (response) {
@@ -183,7 +122,7 @@
 	          }
 	        });
 	        // NoTrx
-	        var table = 'pembelianheader';
+	        var table = 'hasilproduksi';
 	    	var field = 'NoTransaksi';
 	        var prev = 0;
 	    	$.ajax({
@@ -201,10 +140,50 @@
 					var year = today.getFullYear();
 					var month = today.getMonth();
 
-			    	$('#NoTransaksi').val('2'+year+''+month+''+ans);
+			    	$('#NoTransaksi').val('3'+year+''+month+''+ans);
 		        }
 		      }
 		    });
+        });
+        $('#post_').submit(function (e) {
+        	$('#btn_Save').text('Tunggu Sebentar.....');
+		    $('#btn_Save').attr('disabled',true);
+
+		    e.preventDefault();
+			var me = $(this);
+
+			$.ajax({
+		        type    :'post',
+		        url     : '<?=base_url()?>Mstr_Item/CRUD',
+		        data    : me.serialize(),
+		        dataType: 'json',
+		        success : function (response) {
+		          if(response.success == true){
+		            $('#modal_').modal('toggle');
+		            Swal.fire({
+		              type: 'success',
+		              title: 'Horay..',
+		              text: 'Data Berhasil disimpan!',
+		              // footer: '<a href>Why do I have this issue?</a>'
+		            }).then((result)=>{
+		              location.reload();
+		            });
+		          }
+		          else{
+		            $('#modal_').modal('toggle');
+		            Swal.fire({
+		              type: 'error',
+		              title: 'Woops...',
+		              text: response.message,
+		              // footer: '<a href>Why do I have this issue?</a>'
+		            }).then((result)=>{
+		            	$('#modal_').modal('show');
+			            $('#btn_Save').text('Save');
+			            $('#btn_Save').attr('disabled',false);
+		            });
+		          }
+		        }
+		      });
         });
         $('#btn_Save').click(function () {
         	$('#btn_Save').text('Tunggu Sebentar.....');
@@ -216,96 +195,100 @@
 
 		    var NoTransaksi = $('#NoTransaksi').val();
 			var TglTransaksi = $('#TglTransaksi').val();
-			var KodeVendor = $('#KodeVendor').val();
+
+			var KodeItemFG = $('#KodeItemFG').val();
+			var QtyFG = $('#QtyFG').val();
+
 			var Status = 1;
-			var row = 'header';
+			var row = 'bahan';
+			var x = 0;
 
-			$.ajax({
-				type    :'post',
-			    url     : '<?=base_url()?>Trx_pembelian/CRUD',
-			    data    : {'NoTransaksi' : NoTransaksi,'TglTransaksi':TglTransaksi,'KodeVendor':KodeVendor,'Status':Status,'table':row,'RowID':rowid},
-			    dataType: 'json',
-			    success:function (response) {
-			    	if (response.success == true) {
-			    		if (gridItems != '[]') {
-			    			row = 'detail';
+			var KodeItem;
+			var NamaItem;
+			var QtyJual;
+			if (gridItems!= '[]') {
+				$.each(gridItems,function (k,v) {
+					var bahanid = uuidv4();
+					if (row == 'bahan') {
+						$.ajax({
+							async:false,
+							type: "post",
+					        url: "<?=base_url()?>Trx_produksi/CRUD",
+					        data: {'RowID':bahanid,NoTransaksi:$('#NoTransaksi').val(),'TglTransaksi':$('#TglTransaksi').val(),'KodeItemRM':v.KodeItemRM,'NamaItemRM':v.NamaItemRM,'QtyIssue':v.QtyIssue,'table':row},
+					        dataType: "json",
+					        success: function (response) {
+					        	if (response.success==true) {
+					        		x += 1;
+						        	if (x == gridItems.length) {
+						        		row = 'hasil';
+						        		$.ajax({
+						        			async:false,
+						        			type: "post",
+									        url: "<?=base_url()?>Trx_produksi/CRUD",
+									        data: {'RowID':rowid,NoTransaksi:$('#NoTransaksi').val(),'TglTransaksi':$('#TglTransaksi').val(),'KodeItemFG':$('#KodeItemFG').val(),'QtyFG':$('#QtyFG').val(),'table':row},
+									        dataType: "json",
+									        success: function (response2) {
+									        	if (response2.success == true) {
+									        		$('#modal_').modal('toggle');
+										    		Swal.fire({
+										              type: 'success',
+										              title: 'Horray...',
+										              text: 'Status Berhasil Di simpan',
+										              // footer: '<a href>Why do I have this issue?</a>'
+										            }).then((result)=>{
+										              location.reload();
+										            });
 
-			    			var KodeItem;
-		    				var NamaItem;
-		    				var QtyBeli;
-		    				var HargaBeli;
-		    				var x = 0;
-			    			$.each(gridItems,function (k,v) {
-			    				var detailid = uuidv4();
-			    				console.log(gridItems);
-			    				KodeItem = v.ItemCode;
-			    				NamaItem = v.ItemName;
-			    				QtyBeli = v.QtyBeli;
-			    				HargaBeli = v.HargaBeli;
-
-			    				$.ajax({
-				    				type    :'post',
-								    url     : '<?=base_url()?>Trx_pembelian/CRUD',
-								    data    : {'NoTransaksi' : NoTransaksi,'table':row,'KodeItem':KodeItem,'NamaItem':NamaItem,'QtyBeli':QtyBeli,'HargaBeli':HargaBeli,'DetailRowID':detailid,'HeaderID':rowid},
-								    dataType: 'json',
-								    success:function (response) {
-								    	if (response.success == true) {
-								    		x += 1;
-								    		console.log(x + " == " + gridItems.length);
-								    		if (x == gridItems.length ) {
-								    			$('#modal_').modal('toggle');
-								    			Swal.fire({
-									              type: 'success',
-									              title: 'Horray...',
-									              text: 'Data Berhasil Di Tambahkan',
-									              // footer: '<a href>Why do I have this issue?</a>'
-									            }).then((result)=>{
-									              location.reload();
-									            });
-								    		}
-								        	
-								    	}
-								    	else{
-								    		$('#modal_').modal('toggle');
-								        	Swal.fire({
-								              type: 'error',
-								              title: 'Woops...',
-								              text: response.message,
-								              // footer: '<a href>Why do I have this issue?</a>'
-								            }).then((result)=>{
-								              $('#modal_').modal('show');
-								            });
-								    	}
-								    }
-				    			});
-			    			});
-			    		}
-			    		else{
-			    			$('#modal_').modal('toggle');
-				        	Swal.fire({
-				              type: 'error',
-				              title: 'Woops...',
-				              text: response.message,
-				              // footer: '<a href>Why do I have this issue?</a>'
-				            }).then((result)=>{
-				              $('#modal_').modal('show');
-				            });
-			    		}
-			    	}
-			    	else{
-			    		$('#modal_').modal('toggle');
-			        	Swal.fire({
-			              type: 'error',
-			              title: 'Woops...',
-			              text: response.message,
-			              // footer: '<a href>Why do I have this issue?</a>'
-			            }).then((result)=>{
-			              $('#modal_').modal('show');
-			            });
-			    	}
-			    }
-			});
-
+									        	}
+									        	else{
+									        		// error_alert
+									        		$('#error_alert').html("Error!!. "+response2.message+"");
+									        		$('#btn_Save').text('Simpan');
+		   											$('#btn_Save').attr('disabled',false);
+									       //  		$('#modal_').modal('toggle');
+										    		// Swal.fire({
+										      //         type: 'success',
+										      //         title: 'Horray...',
+										      //         text: response2.message,
+										      //         onOpen: function () {
+										      //         	console.log("open");
+										      //         	return true;
+										      //         }
+										      //         // footer: '<a href>Why do I have this issue?</a>'
+										      //       }).then((result)=>{
+										      //         $('#modal_').modal('show');
+										      //         $('#btn_Save').text('Simpan');
+		   											//   $('#btn_Save').attr('disabled',false);
+										      //       });
+										            // return true;
+											        
+									        	}
+									        }
+						        		});
+						        	}
+					        	}
+					        	else{
+					        		$('#error_alert').html("Error!!. "+response.message+"");
+					        		$('#btn_Save').text('Simpan');
+		   							$('#btn_Save').attr('disabled',false);
+					      //   		$('#modal_').modal('toggle');
+						    	// 	Swal.fire({
+						     //          type: 'success',
+						     //          title: 'Horray...',
+						     //          text: response.message,
+						     //          // footer: '<a href>Why do I have this issue?</a>'
+						     //        }).then((result)=>{
+						     //          $('#modal_').modal('show');
+						     //          $('#btn_Save').text('Simpan');
+									  // $('#btn_Save').attr('disabled',false);
+						     //        });
+						     //        return true;
+					        	}
+					        }
+						});
+					}
+				});
+			}
         });
         $('.close').click(function() {
         	location.reload();
@@ -327,7 +310,39 @@
 	          }
 	        });
         });
-
+        $('#Save_Btn_Status').click(function () {
+        	// alert($('#listStatus').val());
+        	$.ajax({
+				type    :'post',
+			    url     : '<?=base_url()?>Trx_produksi/TransactionUpdate',
+			    data    : {'NoTransaksi':$('#NoTransaksi').val(),'Status':$('#listStatus').val()},
+			    dataType: 'json',
+			    success:function (response) {
+			    	if (response.success == true) {
+			    		$('#ModalStatus').modal('toggle');
+			    		Swal.fire({
+			              type: 'success',
+			              title: 'Horray...',
+			              text: 'Status Berhasil Di rubah',
+			              // footer: '<a href>Why do I have this issue?</a>'
+			            }).then((result)=>{
+			              location.reload();
+			            });
+			    	}
+			    	else{
+			    		$('#ModalStatus').modal('toggle');
+				            Swal.fire({
+				              type: 'error',
+				              title: 'Woops...',
+				              text: response.message,
+				              // footer: '<a href>Why do I have this issue?</a>'
+				            }).then((result)=>{
+				            	$('#ModalStatus').modal('show');
+				            });
+			    	}
+			    }
+			});
+        });
 		function GetData(id) {
 			var where_field = 'id';
         	var where_value = id;
@@ -394,15 +409,15 @@
 		                allowEditing:false
 		            },
 		            {
-		                dataField: "KodeVendor",
-		                caption: "Kode Vendor",
+		                dataField: "KodeItemFG",
+		                caption: "Kode Item Hasil",
 		                allowEditing:false
 		            },
 		            {
-		                dataField: "NamaVendor",
-		                caption: "Nama Vendor",
+		                dataField: "NamaItemFG",
+		                caption: "Nama Item Hasil",
 		                allowEditing:false
-		            }
+		            },
 		            // {
 	             //        caption: "Action",
 	             //        allowEditing:false,
@@ -504,7 +519,7 @@
 			$("#gridContainer_Detail").dxDataGrid({
 				allowColumnResizing: true,
 		        dataSource: data,
-		        keyExpr: "ItemCode",
+		        keyExpr: "KodeItemRM",
 		        showBorders: true,
 		        allowColumnReordering: true,
 		        allowColumnResizing: true,
@@ -524,25 +539,20 @@
 		        },
 		        columns: [
 		            {
-		                dataField: "ItemCode",
+		                dataField: "KodeItemRM",
 		                caption: "Kode Item",
 		                allowEditing:true
 		            },
 		            {
-		                dataField: "ItemName",
+		                dataField: "NamaItemRM",
 		                caption: "Nama Item",
 		                allowEditing:false
 		            },
 		            {
-		                dataField: "QtyBeli",
+		                dataField: "QtyIssue",
 		                caption: "Qty",
 		                allowEditing:true
-		            },
-		            {
-		                dataField: "HargaBeli",
-		                caption: "Harga",
-		                allowEditing:true
-		            },
+		            }
 		        ],
 		        onEditingStart: function(e) {
 		            GetData(e.data.ItemCode);
@@ -622,7 +632,7 @@
 		        },
 				onEditorPrepared: function (e) {
 					// console.log(e);
-					if (e.dataField == "ItemCode") {
+					if (e.dataField == "KodeItemRM") {
 						$(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) { 
 
 							var grid = $("#gridContainer_Detail").dxDataGrid("instance");
@@ -637,11 +647,9 @@
 							    dataType: 'json',
 							    success:function (response) {
 							    	if (response.data.length > 0) {
-							    		grid.cellValue(index, "ItemCode", response.data[0]["ItemCode"]);
-							    		grid.cellValue(index, "ItemName", response.data[0]["ItemName"]);
-							    		grid.cellValue(index, "QtyBeli", 0);
-							    		// grid.cellValue(index, "HargaBeli", 0);
-							    		grid.cellValue(index, "HargaBeli", response.data[0]["Harga"]);
+							    		grid.cellValue(index, "KodeItemRM", response.data[0]["ItemCode"]);
+							    		grid.cellValue(index, "NamaItemRM", response.data[0]["ItemName"]);
+							    		grid.cellValue(index, "QtyIssue", 0);
 							    		// console.log(response.data[0][]);
 							    	}
 							    	else{
